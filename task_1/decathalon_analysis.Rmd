@@ -1,0 +1,67 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+
+decathalon_data <- read_csv("data/clean_data")
+```
+
+```{r}
+decathalon_data %>% 
+  select(name, long_jump) %>% 
+  slice_max(long_jump, n = 1)
+```
+
+What was the average 100m time in each competition?
+
+```{r}
+decathalon_data %>% 
+  select(x100m) %>%
+  summarise(average_100m = mean(x100m, na.rm = TRUE)) %>% 
+  pull()
+```
+
+Who had the highest total points across both competitions?
+
+```{r}
+decathalon_data %>% 
+  select(name, points, competition) %>% 
+  group_by(name) %>% 
+  summarise(total_points = sum(points), .groups = 'drop') %>% 
+  slice_max(total_points) %>% 
+  pull(name, total_points)
+```
+What was the shot-put scores for the top three competitors in each competition?
+
+```{r}
+decathalon_data %>% 
+  select(name, shot_put, competition) %>% 
+  group_by(competition) %>% 
+  slice_max(shot_put, n = 3)
+```
+What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
+
+```{r}
+faster_runners <- decathalon_data %>%
+  filter(x400m < 50)
+
+faster_runners %>% 
+  summarise(average_points = mean(points, na.rm = TRUE)) %>% 
+  pull()
+```
+
+```{r}
+
+slower_runners <- decathalon_data %>%
+  filter(x400m > 50)
+
+slower_runners %>% 
+  summarise(average_points = mean(points, na.rm = TRUE)) %>% 
+  pull()
+```
+
+
