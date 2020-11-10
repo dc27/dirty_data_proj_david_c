@@ -1,0 +1,89 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+What is the total number of candy ratings given across the three years. (number
+of candy ratings, not number of raters. Don’t count missing values)
+
+What was the average age of people who are going out trick or treating and the
+average age of people 3. not going trick or treating?
+
+For each of joy, despair and meh, which candy bar received the most of these
+ratings? How many people rated Starburst as despair?
+For the next three questions, count despair as -1, joy as +1 and meh as 0.
+
+What was the most popular candy bar by this rating system for each gender in the
+dataset?
+What was the most popular candy bar in each year?
+What was the most popular candy bar by this rating for people in US, Canada, UK
+and all other countries?
+
+
+```{r}
+library(tidyverse)
+
+dataset_1 <- readxl::read_xlsx("data/boing-boing-candy-2015.xlsx", 1)
+dataset_2 <- readxl::read_xlsx("data/boing-boing-candy-2016.xlsx", 1)
+dataset_3 <- readxl::read_xlsx("data/boing-boing-candy-2017.xlsx", 1)
+  
+readxl::excel_sheets("data/boing-boing-candy-2017.xlsx")
+
+```
+
+```{r}
+clean_names <- dataset_1 %>% 
+  janitor::clean_names()
+
+subset_clean_names <- clean_names %>% 
+  select(!starts_with("please") &
+         !starts_with("check_all") &
+         !starts_with("betty") &
+         !starts_with("that_dress_that") &
+         !starts_with("fill_in") &
+         !contains("favourite_font") &
+         !starts_with("which_day") &
+         !starts_with("guess") &
+         !starts_with("if_you_squint")) %>% 
+  rename(age = how_old_are_you,
+         going_out = are_you_going_actually_going_trick_or_treating_yourself,
+         hersheys_dark_chocolate = dark_chocolate_hershey) %>%
+  mutate(age = as.integer(age))
+```
+
+```{r}
+clean_names2 <- dataset_2 %>% 
+  janitor::clean_names()
+
+subset_clean_names_2 <- clean_names2 %>%
+  rename(country = which_country_do_you_live_in,
+         age = how_old_are_you,
+         gender = your_gender,
+         going_out = are_you_going_actually_going_trick_or_treating_yourself,
+         licorice = licorice_yes_black,
+         person_of_interest_season_3 =
+           person_of_interest_season_3_dvd_box_set_not_including_disc_4_with_hilarious_outtakes,
+         box_o_raisins = boxo_raisins,
+         peanut_m_ms = peanut_m_m_s
+         ) %>% 
+  select(!starts_with("which") &
+           !starts_with("please") &
+           !starts_with("betty") &
+           !starts_with("that_dress") &
+           !contains("favourite_font") &
+           !starts_with("do_you") &
+           !starts_with("guess") &
+           !starts_with("when_you"))
+
+names(subset_clean_names_2)
+```
+
+```{r}
+setdiff(names(subset_clean_names), names(subset_clean_names_2))
+```
+
+```{r}
+setdiff(names(subset_clean_names_2), names(subset_clean_names))
+```
+
+
