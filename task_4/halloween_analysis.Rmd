@@ -22,112 +22,85 @@ What was the most popular candy bar by this rating for people in US, Canada, UK
 and all other countries?
 
 
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 
-dataset_1 <- readxl::read_xlsx("data/boing-boing-candy-2015.xlsx", 1)
-dataset_2 <- readxl::read_xlsx("data/boing-boing-candy-2016.xlsx", 1)
-dataset_3 <- readxl::read_xlsx("data/boing-boing-candy-2017.xlsx", 1)
-  
-readxl::excel_sheets("data/boing-boing-candy-2017.xlsx")
+dataset_2015 <- read_csv("data/clean_data/candy_2015.csv")
+dataset_2016 <- read_csv("data/clean_data/candy_2016.csv")
+dataset_2017 <- read_csv("data/clean_data/candy_2017.csv")
 
-```
-
-```{r}
-clean_names <- dataset_1 %>% 
-  janitor::clean_names()
-
-subset_clean_names <- clean_names %>% 
-  select(-timestamp & !starts_with("please") &
-         !starts_with("check_all") &
-         !starts_with("betty") &
-         !starts_with("that_dress_that") &
-         !starts_with("fill_in") &
-         !contains("favourite_font") &
-         !starts_with("which_day") &
-         !starts_with("guess") &
-         !starts_with("if_you_squint")) %>% 
-  rename(age = how_old_are_you,
-         going_out = are_you_going_actually_going_trick_or_treating_yourself,
-         hersheys_dark_chocolate = dark_chocolate_hershey,
-         hersheys_milk_chocolate = hershey_s_milk_chocolate,
-         hersheys_kissables = hershey_s_kissables,
-         peanut_m_ms = peanut_m_m_s,
-         bonkers_the_candy = bonkers,
-         sea_salt_flavored_stuff = sea_salt_flavored_stuff_probably_chocolate_since_this_is_the_it_flavor_of_the_year) %>%
-  mutate(age = as.integer(age))
-```
-
-```{r}
-clean_names2 <- dataset_2 %>% 
-  janitor::clean_names()
-
-subset_clean_names_2 <- clean_names2 %>%
-  rename(country = which_country_do_you_live_in,
-         age = how_old_are_you,
-         gender = your_gender,
-         going_out = are_you_going_actually_going_trick_or_treating_yourself,
-         licorice = licorice_yes_black,
-         person_of_interest_season_3 =
-           person_of_interest_season_3_dvd_box_set_not_including_disc_4_with_hilarious_outtakes,
-         box_o_raisins = boxo_raisins,
-         peanut_m_ms = peanut_m_m_s,
-         sweetums = sweetums_a_friend_to_diabetes,
-         hersheys_milk_chocolate = hershey_s_milk_chocolate
-         ) %>% 
-  select(-timestamp &
-           !starts_with("which") &
-           !starts_with("please") &
-           !starts_with("betty") &
-           !starts_with("that_dress") &
-           !contains("favourite_font") &
-           !starts_with("do_you") &
-           !starts_with("guess") &
-           !starts_with("when_you") &
-           !contains("ignore")) %>%
-  mutate(age = as.integer(age))
-
-```
-
-```{r}
-setdiff(names(subset_clean_names), names(subset_clean_names_2))
-```
-
-```{r}
-setdiff(names(subset_clean_names_2), names(subset_clean_names))
 ```
 
 
 ```{r}
-clean_names3 <- dataset_3 %>% 
-  janitor::clean_names()
 
-d3_subset_clean <- clean_names3 %>% 
-  select(starts_with("q"))
+make_data_long <- function (wide_data) {
+  long_data <- wide_data %>% 
+    pivot_longer(-year & -going_out & -gender & -age & -country,
+               names_to = "candy",
+               values_to = "reaction") %>%
+  select(year, age, gender, country, going_out, candy, reaction)
+}
 
-names(d3_subset_clean) <- str_remove(names(d3_subset_clean), "q[0-9]+_")
-
-d3_subset_clean <- d3_subset_clean %>% 
-  select(-state_province_county_etc &
-         !starts_with("media") & 
-           -dress, -joy_other, -despair_other, -other_comments, -day) %>% 
-  rename(anonymous_brown_globs_that_come_in_black_and_orange_wrappers =
-         anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes,
-         peanut_m_ms = peanut_m_m_s,
-         box_o_raisins = boxo_raisins,
-         hersheys_milk_chocolate = hershey_s_milk_chocolate,
-         licorice = licorice_yes_black,
-         sweetums = sweetums_a_friend_to_diabetes,
-    x100_grand_bar = "100_grand_bar")
+remove_empty_rows <- function(data) {
+  filtered_data <- data %>% 
+    filter(!(is.na(going_out) &
+           is.na(gender) &
+           is.na(age) &
+           is.na(country) &
+           is.na(reaction)))
+    
+}
          
          
 ```
 
 ```{r}
-setdiff(names(d3_subset_clean),names(subset_clean_names_2))
+
+long_2015 <- make_data_long(dataset_2015)
+long_2016 <- make_data_long(dataset_2016)
+long_2017 <- make_data_long(dataset_2017)
+
+
+# doing this before lengthening the data? I'm not sure if it matters.
+
+filtered_long_2015 <- remove_empty_rows(long_2015)
+filtered_long_2016 <- remove_empty_rows(long_2016)
+filtered_long_2017 <- remove_empty_rows(long_2017)
+
+
+# constructe the mega data
+all_the_candy <- bind_rows(filtered_long_2015,
+          filtered_long_2016,
+          filtered_long_2017)
+
 ```
 
 ```{r}
-setdiff(names(subset_clean_names_2), names(d3_subset_clean))
+USA_patterns <- "u[ .]*s|ica|state|trump|ates|d s|the yoo|new york|california|pittsburgh|north carolina|new jersey|amerca|murrika|alaska"
+UK_patterns <- "u[.]*k|in[g]*[d]*om|england|scotland"
+spain_patterns <- "spain|espa"
+Canada_patterns <- "canada"
+netherlands_patterns <- "netherl"
+
+all_the_candy_low_country <- all_the_candy %>%
+  mutate(country = str_to_lower(country))
+
+all_the_candy_low_country %>% 
+mutate(country = case_when(
+    str_detect(country, USA_patterns) ~ "USA",
+    str_detect(country, UK_patterns) ~ "UK",
+    str_detect(country, spain_patterns) ~ "spain",
+    str_detect(country, Canada_patterns) ~ "canada",
+    str_detect(country, netherlands_patterns) ~ "the netherlands",
+    TRUE ~ country)) %>% 
+mutate(country = str_to_title(country),
+       age = case_when(
+        is.numeric(country) ~ country,
+        TRUE ~ age))
+```
+
+```{r}
+
 ```
 

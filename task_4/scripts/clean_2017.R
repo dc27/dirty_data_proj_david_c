@@ -26,8 +26,16 @@ make_data3_clean <- function(dirty_data) {
            licorice = licorice_yes_black,
            sweetums = sweetums_a_friend_to_diabetes,
            x100_grand_bar = "100_grand_bar")
+  clean_names_and_age <- furth_sub_clean_better_var_names %>% 
+    mutate(age = as.integer(age),
+           year = 2017) %>% 
+  mutate(going_out = as.logical(
+    case_when(
+      going_out == "Yes" ~ TRUE,
+      going_out == "No" ~ FALSE,
+      TRUE ~ NA)))
   
-  further_subset_clean_names %>%
+  clean_names_and_age %>%
     write_csv("data/clean_data/candy_2017.csv")
   
 }

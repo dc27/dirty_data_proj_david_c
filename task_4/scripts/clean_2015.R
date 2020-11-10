@@ -31,7 +31,17 @@ make_data1_clean <- function(dirty_data) {
            sea_salt_flavored_stuff = sea_salt_flavored_stuff_probably_chocolate_since_this_is_the_it_flavor_of_the_year)
     
   subset_clean_names_and_age <- subset_clean_better_var_names %>%     
-    mutate(age = as.integer(age))
+    mutate(age = as.integer(age),
+           year = 2015,
+           country = NA,
+           gender = NA) %>%
+    mutate(going_out = as.logical(
+      case_when(
+        going_out == "Yes" ~ TRUE,
+        going_out == "No" ~ FALSE,
+        TRUE ~ NA)),
+      country = as.character(country),
+      gender = as.character(gender))
   # someone put "fifty.nine.ish" - "I don't know what number this is so it's been treated as NA.
   
   

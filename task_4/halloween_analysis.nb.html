@@ -1765,158 +1765,37 @@ summary {
 <p>What was the most popular candy bar by this rating system for each gender in the dataset? What was the most popular candy bar in each year? What was the most popular candy bar by this rating for people in US, Canada, UK and all other countries?</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5cbmRhdGFzZXRfMSA8LSByZWFkeGw6OnJlYWRfeGxzeChcImRhdGEvYm9pbmctYm9pbmctY2FuZHktMjAxNS54bHN4XCIsIDEpXG5kYXRhc2V0XzIgPC0gcmVhZHhsOjpyZWFkX3hsc3goXCJkYXRhL2JvaW5nLWJvaW5nLWNhbmR5LTIwMTYueGxzeFwiLCAxKVxuZGF0YXNldF8zIDwtIHJlYWR4bDo6cmVhZF94bHN4KFwiZGF0YS9ib2luZy1ib2luZy1jYW5keS0yMDE3Lnhsc3hcIiwgMSlcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5cbmRhdGFzZXRfMjAxNSA8LSByZWFkX2NzdihcImRhdGEvY2xlYW5fZGF0YS9jYW5keV8yMDE1LmNzdlwiKVxuZGF0YXNldF8yMDE2IDwtIHJlYWRfY3N2KFwiZGF0YS9jbGVhbl9kYXRhL2NhbmR5XzIwMTYuY3N2XCIpXG5kYXRhc2V0XzIwMTcgPC0gcmVhZF9jc3YoXCJkYXRhL2NsZWFuX2RhdGEvY2FuZHlfMjAxNy5jc3ZcIilcblxuYGBgIn0= -->
 <pre class="r"><code>library(tidyverse)
 
-dataset_1 &lt;- readxl::read_xlsx(&quot;data/boing-boing-candy-2015.xlsx&quot;, 1)
-dataset_2 &lt;- readxl::read_xlsx(&quot;data/boing-boing-candy-2016.xlsx&quot;, 1)
-dataset_3 &lt;- readxl::read_xlsx(&quot;data/boing-boing-candy-2017.xlsx&quot;, 1)</code></pre>
+dataset_2015 &lt;- read_csv(&quot;data/clean_data/candy_2015.csv&quot;)
+dataset_2016 &lt;- read_csv(&quot;data/clean_data/candy_2016.csv&quot;)
+dataset_2017 &lt;- read_csv(&quot;data/clean_data/candy_2017.csv&quot;)
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTmV3IG5hbWVzOlxuKiBgYCAtPiAuLi4xMTRcbiJ9 -->
-<pre><code>New names:
-* `` -&gt; ...114</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICBcbnJlYWR4bDo6ZXhjZWxfc2hlZXRzKFwiZGF0YS9ib2luZy1ib2luZy1jYW5keS0yMDE3Lnhsc3hcIilcbmBgYCJ9 -->
-<pre class="r"><code>  
-readxl::excel_sheets(&quot;data/boing-boing-candy-2017.xlsx&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwicmVzcG9uc2VzICgyKSAoMSkuY3N2XCJcbiJ9 -->
-<pre><code>[1] &quot;responses (2) (1).csv&quot;</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2xlYW5fbmFtZXMgPC0gZGF0YXNldF8xICU+JSBcbiAgamFuaXRvcjo6Y2xlYW5fbmFtZXMoKVxuXG5zdWJzZXRfY2xlYW5fbmFtZXMgPC0gY2xlYW5fbmFtZXMgJT4lIFxuICBzZWxlY3QoLXRpbWVzdGFtcCAmICFzdGFydHNfd2l0aChcInBsZWFzZVwiKSAmXG4gICAgICAgICAhc3RhcnRzX3dpdGgoXCJjaGVja19hbGxcIikgJlxuICAgICAgICAgIXN0YXJ0c193aXRoKFwiYmV0dHlcIikgJlxuICAgICAgICAgIXN0YXJ0c193aXRoKFwidGhhdF9kcmVzc190aGF0XCIpICZcbiAgICAgICAgICFzdGFydHNfd2l0aChcImZpbGxfaW5cIikgJlxuICAgICAgICAgIWNvbnRhaW5zKFwiZmF2b3VyaXRlX2ZvbnRcIikgJlxuICAgICAgICAgIXN0YXJ0c193aXRoKFwid2hpY2hfZGF5XCIpICZcbiAgICAgICAgICFzdGFydHNfd2l0aChcImd1ZXNzXCIpICZcbiAgICAgICAgICFzdGFydHNfd2l0aChcImlmX3lvdV9zcXVpbnRcIikpICU+JSBcbiAgcmVuYW1lKGFnZSA9IGhvd19vbGRfYXJlX3lvdSxcbiAgICAgICAgIGdvaW5nX291dCA9IGFyZV95b3VfZ29pbmdfYWN0dWFsbHlfZ29pbmdfdHJpY2tfb3JfdHJlYXRpbmdfeW91cnNlbGYsXG4gICAgICAgICBoZXJzaGV5c19kYXJrX2Nob2NvbGF0ZSA9IGRhcmtfY2hvY29sYXRlX2hlcnNoZXksXG4gICAgICAgICBoZXJzaGV5c19taWxrX2Nob2NvbGF0ZSA9IGhlcnNoZXlfc19taWxrX2Nob2NvbGF0ZSxcbiAgICAgICAgIGhlcnNoZXlzX2tpc3NhYmxlcyA9IGhlcnNoZXlfc19raXNzYWJsZXMsXG4gICAgICAgICBwZWFudXRfbV9tcyA9IHBlYW51dF9tX21fcyxcbiAgICAgICAgIGJvbmtlcnNfdGhlX2NhbmR5ID0gYm9ua2VycyxcbiAgICAgICAgIHNlYV9zYWx0X2ZsYXZvcmVkX3N0dWZmID0gc2VhX3NhbHRfZmxhdm9yZWRfc3R1ZmZfcHJvYmFibHlfY2hvY29sYXRlX3NpbmNlX3RoaXNfaXNfdGhlX2l0X2ZsYXZvcl9vZl90aGVfeWVhcikgJT4lXG4gIG11dGF0ZShhZ2UgPSBhcy5pbnRlZ2VyKGFnZSkpXG5gYGAifQ== -->
-<pre class="r"><code>clean_names &lt;- dataset_1 %&gt;% 
-  janitor::clean_names()
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5tYWtlX2RhdGFfbG9uZyA8LSBmdW5jdGlvbiAod2lkZV9kYXRhKSB7XG4gIGxvbmdfZGF0YSA8LSB3aWRlX2RhdGEgJT4lIFxuICAgIHBpdm90X2xvbmdlcigteWVhciAmIC1nb2luZ19vdXQgJiAtZ2VuZGVyICYgLWFnZSAmIC1jb3VudHJ5LFxuICAgICAgICAgICAgICAgbmFtZXNfdG8gPSBcImNhbmR5XCIsXG4gICAgICAgICAgICAgICB2YWx1ZXNfdG8gPSBcInJlYWN0aW9uXCIpICU+JVxuICBzZWxlY3QoeWVhciwgYWdlLCBnZW5kZXIsIGNvdW50cnksIGdvaW5nX291dCwgY2FuZHksIHJlYWN0aW9uKVxufVxuXG5yZW1vdmVfZW1wdHlfcm93cyA8LSBmdW5jdGlvbihkYXRhKSB7XG4gIGZpbHRlcmVkX2RhdGEgPC0gZGF0YSAlPiUgXG4gICAgZmlsdGVyKCEoaXMubmEoZ29pbmdfb3V0KSAmXG4gICAgICAgICAgIGlzLm5hKGdlbmRlcikgJlxuICAgICAgICAgICBpcy5uYShhZ2UpICZcbiAgICAgICAgICAgaXMubmEoY291bnRyeSkgJlxuICAgICAgICAgICBpcy5uYShyZWFjdGlvbikpKVxuICAgIFxufVxuICAgICAgICAgXG4gICAgICAgICBcbmBgYCJ9 -->
+<pre class="r"><code>
+make_data_long &lt;- function (wide_data) {
+  long_data &lt;- wide_data %&gt;% 
+    pivot_longer(-year &amp; -going_out &amp; -gender &amp; -age &amp; -country,
+               names_to = &quot;candy&quot;,
+               values_to = &quot;reaction&quot;) %&gt;%
+  select(year, age, gender, country, going_out, candy, reaction)
+}
 
-subset_clean_names &lt;- clean_names %&gt;% 
-  select(-timestamp &amp; !starts_with(&quot;please&quot;) &amp;
-         !starts_with(&quot;check_all&quot;) &amp;
-         !starts_with(&quot;betty&quot;) &amp;
-         !starts_with(&quot;that_dress_that&quot;) &amp;
-         !starts_with(&quot;fill_in&quot;) &amp;
-         !contains(&quot;favourite_font&quot;) &amp;
-         !starts_with(&quot;which_day&quot;) &amp;
-         !starts_with(&quot;guess&quot;) &amp;
-         !starts_with(&quot;if_you_squint&quot;)) %&gt;% 
-  rename(age = how_old_are_you,
-         going_out = are_you_going_actually_going_trick_or_treating_yourself,
-         hersheys_dark_chocolate = dark_chocolate_hershey,
-         hersheys_milk_chocolate = hershey_s_milk_chocolate,
-         hersheys_kissables = hershey_s_kissables,
-         peanut_m_ms = peanut_m_m_s,
-         bonkers_the_candy = bonkers,
-         sea_salt_flavored_stuff = sea_salt_flavored_stuff_probably_chocolate_since_this_is_the_it_flavor_of_the_year) %&gt;%
-  mutate(age = as.integer(age))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUHJvYmxlbSB3aXRoIGBtdXRhdGUoKWAgaW5wdXQgYGFnZWAuXG7ihLkgTkFzIGludHJvZHVjZWQgYnkgY29lcmNpb25cbuKEuSBJbnB1dCBgYWdlYCBpcyBgYXMuaW50ZWdlcihhZ2UpYC5OQXMgaW50cm9kdWNlZCBieSBjb2VyY2lvblByb2JsZW0gd2l0aCBgbXV0YXRlKClgIGlucHV0IGBhZ2VgLlxu4oS5IE5BcyBpbnRyb2R1Y2VkIGJ5IGNvZXJjaW9uIHRvIGludGVnZXIgcmFuZ2VcbuKEuSBJbnB1dCBgYWdlYCBpcyBgYXMuaW50ZWdlcihhZ2UpYC5OQXMgaW50cm9kdWNlZCBieSBjb2VyY2lvbiB0byBpbnRlZ2VyIHJhbmdlXG4ifQ== -->
-<pre><code>Problem with `mutate()` input `age`.
-ℹ NAs introduced by coercion
-ℹ Input `age` is `as.integer(age)`.NAs introduced by coercionProblem with `mutate()` input `age`.
-ℹ NAs introduced by coercion to integer range
-ℹ Input `age` is `as.integer(age)`.NAs introduced by coercion to integer range</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2xlYW5fbmFtZXMyIDwtIGRhdGFzZXRfMiAlPiUgXG4gIGphbml0b3I6OmNsZWFuX25hbWVzKClcblxuc3Vic2V0X2NsZWFuX25hbWVzXzIgPC0gY2xlYW5fbmFtZXMyICU+JVxuICByZW5hbWUoY291bnRyeSA9IHdoaWNoX2NvdW50cnlfZG9feW91X2xpdmVfaW4sXG4gICAgICAgICBhZ2UgPSBob3dfb2xkX2FyZV95b3UsXG4gICAgICAgICBnZW5kZXIgPSB5b3VyX2dlbmRlcixcbiAgICAgICAgIGdvaW5nX291dCA9IGFyZV95b3VfZ29pbmdfYWN0dWFsbHlfZ29pbmdfdHJpY2tfb3JfdHJlYXRpbmdfeW91cnNlbGYsXG4gICAgICAgICBsaWNvcmljZSA9IGxpY29yaWNlX3llc19ibGFjayxcbiAgICAgICAgIHBlcnNvbl9vZl9pbnRlcmVzdF9zZWFzb25fMyA9XG4gICAgICAgICAgIHBlcnNvbl9vZl9pbnRlcmVzdF9zZWFzb25fM19kdmRfYm94X3NldF9ub3RfaW5jbHVkaW5nX2Rpc2NfNF93aXRoX2hpbGFyaW91c19vdXR0YWtlcyxcbiAgICAgICAgIGJveF9vX3JhaXNpbnMgPSBib3hvX3JhaXNpbnMsXG4gICAgICAgICBwZWFudXRfbV9tcyA9IHBlYW51dF9tX21fcyxcbiAgICAgICAgIHN3ZWV0dW1zID0gc3dlZXR1bXNfYV9mcmllbmRfdG9fZGlhYmV0ZXMsXG4gICAgICAgICBoZXJzaGV5c19taWxrX2Nob2NvbGF0ZSA9IGhlcnNoZXlfc19taWxrX2Nob2NvbGF0ZVxuICAgICAgICAgKSAlPiUgXG4gIHNlbGVjdCgtdGltZXN0YW1wICZcbiAgICAgICAgICAgIXN0YXJ0c193aXRoKFwid2hpY2hcIikgJlxuICAgICAgICAgICAhc3RhcnRzX3dpdGgoXCJwbGVhc2VcIikgJlxuICAgICAgICAgICAhc3RhcnRzX3dpdGgoXCJiZXR0eVwiKSAmXG4gICAgICAgICAgICFzdGFydHNfd2l0aChcInRoYXRfZHJlc3NcIikgJlxuICAgICAgICAgICAhY29udGFpbnMoXCJmYXZvdXJpdGVfZm9udFwiKSAmXG4gICAgICAgICAgICFzdGFydHNfd2l0aChcImRvX3lvdVwiKSAmXG4gICAgICAgICAgICFzdGFydHNfd2l0aChcImd1ZXNzXCIpICZcbiAgICAgICAgICAgIXN0YXJ0c193aXRoKFwid2hlbl95b3VcIikgJlxuICAgICAgICAgICAhY29udGFpbnMoXCJpZ25vcmVcIikpICU+JVxuICBtdXRhdGUoYWdlID0gYXMuaW50ZWdlcihhZ2UpKVxuYGBgIn0= -->
-<pre class="r"><code>clean_names2 &lt;- dataset_2 %&gt;% 
-  janitor::clean_names()
-
-subset_clean_names_2 &lt;- clean_names2 %&gt;%
-  rename(country = which_country_do_you_live_in,
-         age = how_old_are_you,
-         gender = your_gender,
-         going_out = are_you_going_actually_going_trick_or_treating_yourself,
-         licorice = licorice_yes_black,
-         person_of_interest_season_3 =
-           person_of_interest_season_3_dvd_box_set_not_including_disc_4_with_hilarious_outtakes,
-         box_o_raisins = boxo_raisins,
-         peanut_m_ms = peanut_m_m_s,
-         sweetums = sweetums_a_friend_to_diabetes,
-         hersheys_milk_chocolate = hershey_s_milk_chocolate
-         ) %&gt;% 
-  select(-timestamp &amp;
-           !starts_with(&quot;which&quot;) &amp;
-           !starts_with(&quot;please&quot;) &amp;
-           !starts_with(&quot;betty&quot;) &amp;
-           !starts_with(&quot;that_dress&quot;) &amp;
-           !contains(&quot;favourite_font&quot;) &amp;
-           !starts_with(&quot;do_you&quot;) &amp;
-           !starts_with(&quot;guess&quot;) &amp;
-           !starts_with(&quot;when_you&quot;) &amp;
-           !contains(&quot;ignore&quot;)) %&gt;%
-  mutate(age = as.integer(age))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUHJvYmxlbSB3aXRoIGBtdXRhdGUoKWAgaW5wdXQgYGFnZWAuXG7ihLkgTkFzIGludHJvZHVjZWQgYnkgY29lcmNpb25cbuKEuSBJbnB1dCBgYWdlYCBpcyBgYXMuaW50ZWdlcihhZ2UpYC5OQXMgaW50cm9kdWNlZCBieSBjb2VyY2lvblByb2JsZW0gd2l0aCBgbXV0YXRlKClgIGlucHV0IGBhZ2VgLlxu4oS5IE5BcyBpbnRyb2R1Y2VkIGJ5IGNvZXJjaW9uIHRvIGludGVnZXIgcmFuZ2VcbuKEuSBJbnB1dCBgYWdlYCBpcyBgYXMuaW50ZWdlcihhZ2UpYC5OQXMgaW50cm9kdWNlZCBieSBjb2VyY2lvbiB0byBpbnRlZ2VyIHJhbmdlXG4ifQ== -->
-<pre><code>Problem with `mutate()` input `age`.
-ℹ NAs introduced by coercion
-ℹ Input `age` is `as.integer(age)`.NAs introduced by coercionProblem with `mutate()` input `age`.
-ℹ NAs introduced by coercion to integer range
-ℹ Input `age` is `as.integer(age)`.NAs introduced by coercion to integer range</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0ZGlmZihuYW1lcyhzdWJzZXRfY2xlYW5fbmFtZXMpLCBuYW1lcyhzdWJzZXRfY2xlYW5fbmFtZXNfMikpXG5gYGAifQ== -->
-<pre class="r"><code>setdiff(names(subset_clean_names), names(subset_clean_names_2))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcImJyYWNoX3Byb2R1Y3RzX25vdF9pbmNsdWRpbmdfY2FuZHlfY29yblwiIFwiYnViYmxlX2d1bVwiICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcbiBbM10gXCJoZXJzaGV5c19raXNzYWJsZXNcIiAgICAgICAgICAgICAgICAgICAgICBcImxhcGVsX3BpbnNcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4gWzVdIFwicnVudHNcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJtaW50X2xlYXZlc1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuIFs3XSBcIm1pbnRfbV9tc1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwicmliYm9uX2NhbmR5XCIgICAgICAgICAgICAgICAgICAgICAgICAgICBcbiBbOV0gXCJwZXRlcnNvbl9icmFuZF9zaWRld2Fsa19jaGFsa1wiICAgICAgICAgICBcInBlYW51dF9idXR0ZXJfYmFyc1wiICAgICAgICAgICAgICAgICAgICAgXG5bMTFdIFwicGVhbnV0X2J1dHRlcl9qYXJzXCIgICAgICAgICAgICAgICAgICAgICAgXCJzZWFfc2FsdF9mbGF2b3JlZF9zdHVmZlwiICAgICAgICAgICAgICAgIFxuIn0= -->
-<pre><code> [1] &quot;brach_products_not_including_candy_corn&quot; &quot;bubble_gum&quot;                             
- [3] &quot;hersheys_kissables&quot;                      &quot;lapel_pins&quot;                             
- [5] &quot;runts&quot;                                   &quot;mint_leaves&quot;                            
- [7] &quot;mint_m_ms&quot;                               &quot;ribbon_candy&quot;                           
- [9] &quot;peterson_brand_sidewalk_chalk&quot;           &quot;peanut_butter_bars&quot;                     
-[11] &quot;peanut_butter_jars&quot;                      &quot;sea_salt_flavored_stuff&quot;                </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0ZGlmZihuYW1lcyhzdWJzZXRfY2xlYW5fbmFtZXNfMiksIG5hbWVzKHN1YnNldF9jbGVhbl9uYW1lcykpXG5gYGAifQ== -->
-<pre class="r"><code>setdiff(names(subset_clean_names_2), names(subset_clean_names))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcImdlbmRlclwiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJjb3VudHJ5XCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4gWzNdIFwiYm9ua2Vyc190aGVfYm9hcmRfZ2FtZVwiICAgICAgICAgICAgICAgICAgICBcImNoYXJkb25uYXlcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcbiBbNV0gXCJjb2ZmZWVfY3Jpc3BcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiZG92ZV9iYXJzXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuIFs3XSBcImhlcnNoZXlzX2tpc3Nlc1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJtaWtlX2FuZF9pa2VcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4gWzldIFwiYmx1ZV9tX21zXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcInJlZF9tX21zXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcblsxMV0gXCJ0aGlyZF9wYXJ0eV9tX21zXCIgICAgICAgICAgICAgICAgICAgICAgICAgIFwibXJfZ29vZGJhclwiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzEzXSBcInBlZXBzXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJwZXJzb25fb2ZfaW50ZXJlc3Rfc2Vhc29uXzNcIiAgICAgICAgICAgICAgXG5bMTVdIFwicmVlc2VzX3BpZWNlc1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcInNvdXJwYXRjaF9raWRzX2lfZV9hYm9taW5hdGlvbnNfb2ZfbmF0dXJlXCJcblsxN10gXCJzd2VldF90YXJ0c1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwidGljX3RhY3NcIiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzE5XSBcIndoYXRjaGFtYWNhbGxpdF9iYXJzXCIgICAgICAgICAgICAgICAgICAgICBcbiJ9 -->
-<pre><code> [1] &quot;gender&quot;                                    &quot;country&quot;                                  
- [3] &quot;bonkers_the_board_game&quot;                    &quot;chardonnay&quot;                               
- [5] &quot;coffee_crisp&quot;                              &quot;dove_bars&quot;                                
- [7] &quot;hersheys_kisses&quot;                           &quot;mike_and_ike&quot;                             
- [9] &quot;blue_m_ms&quot;                                 &quot;red_m_ms&quot;                                 
-[11] &quot;third_party_m_ms&quot;                          &quot;mr_goodbar&quot;                               
-[13] &quot;peeps&quot;                                     &quot;person_of_interest_season_3&quot;              
-[15] &quot;reeses_pieces&quot;                             &quot;sourpatch_kids_i_e_abominations_of_nature&quot;
-[17] &quot;sweet_tarts&quot;                               &quot;tic_tacs&quot;                                 
-[19] &quot;whatchamacallit_bars&quot;                     </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY2xlYW5fbmFtZXMzIDwtIGRhdGFzZXRfMyAlPiUgXG4gIGphbml0b3I6OmNsZWFuX25hbWVzKClcblxuZDNfc3Vic2V0X2NsZWFuIDwtIGNsZWFuX25hbWVzMyAlPiUgXG4gIHNlbGVjdChzdGFydHNfd2l0aChcInFcIikpXG5cbm5hbWVzKGQzX3N1YnNldF9jbGVhbikgPC0gc3RyX3JlbW92ZShuYW1lcyhkM19zdWJzZXRfY2xlYW4pLCBcInFbMC05XStfXCIpXG5cbmQzX3N1YnNldF9jbGVhbiA8LSBkM19zdWJzZXRfY2xlYW4gJT4lIFxuICBzZWxlY3QoLXN0YXRlX3Byb3ZpbmNlX2NvdW50eV9ldGMgJlxuICAgICAgICAgIXN0YXJ0c193aXRoKFwibWVkaWFcIikgJiBcbiAgICAgICAgICAgLWRyZXNzLCAtam95X290aGVyLCAtZGVzcGFpcl9vdGhlciwgLW90aGVyX2NvbW1lbnRzLCAtZGF5KSAlPiUgXG4gIHJlbmFtZShhbm9ueW1vdXNfYnJvd25fZ2xvYnNfdGhhdF9jb21lX2luX2JsYWNrX2FuZF9vcmFuZ2Vfd3JhcHBlcnMgPVxuICAgICAgICAgYW5vbnltb3VzX2Jyb3duX2dsb2JzX3RoYXRfY29tZV9pbl9ibGFja19hbmRfb3JhbmdlX3dyYXBwZXJzX2Ffa19hX21hcnlfamFuZXMsXG4gICAgICAgICBwZWFudXRfbV9tcyA9IHBlYW51dF9tX21fcyxcbiAgICAgICAgIGJveF9vX3JhaXNpbnMgPSBib3hvX3JhaXNpbnMsXG4gICAgICAgICBoZXJzaGV5c19taWxrX2Nob2NvbGF0ZSA9IGhlcnNoZXlfc19taWxrX2Nob2NvbGF0ZSxcbiAgICAgICAgIGxpY29yaWNlID0gbGljb3JpY2VfeWVzX2JsYWNrLFxuICAgICAgICAgc3dlZXR1bXMgPSBzd2VldHVtc19hX2ZyaWVuZF90b19kaWFiZXRlcyxcbiAgICB4MTAwX2dyYW5kX2JhciA9IFwiMTAwX2dyYW5kX2JhclwiKVxuICAgICAgICAgXG4gICAgICAgICBcbmBgYCJ9 -->
-<pre class="r"><code>clean_names3 &lt;- dataset_3 %&gt;% 
-  janitor::clean_names()
-
-d3_subset_clean &lt;- clean_names3 %&gt;% 
-  select(starts_with(&quot;q&quot;))
-
-names(d3_subset_clean) &lt;- str_remove(names(d3_subset_clean), &quot;q[0-9]+_&quot;)
-
-d3_subset_clean &lt;- d3_subset_clean %&gt;% 
-  select(-state_province_county_etc &amp;
-         !starts_with(&quot;media&quot;) &amp; 
-           -dress, -joy_other, -despair_other, -other_comments, -day) %&gt;% 
-  rename(anonymous_brown_globs_that_come_in_black_and_orange_wrappers =
-         anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes,
-         peanut_m_ms = peanut_m_m_s,
-         box_o_raisins = boxo_raisins,
-         hersheys_milk_chocolate = hershey_s_milk_chocolate,
-         licorice = licorice_yes_black,
-         sweetums = sweetums_a_friend_to_diabetes,
-    x100_grand_bar = &quot;100_grand_bar&quot;)
+remove_empty_rows &lt;- function(data) {
+  filtered_data &lt;- data %&gt;% 
+    filter(!(is.na(going_out) &amp;
+           is.na(gender) &amp;
+           is.na(age) &amp;
+           is.na(country) &amp;
+           is.na(reaction)))
+    
+}
          
          </code></pre>
 <!-- rnb-source-end -->
@@ -1924,32 +1803,67 @@ d3_subset_clean &lt;- d3_subset_clean %&gt;%
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0ZGlmZihuYW1lcyhkM19zdWJzZXRfY2xlYW4pLG5hbWVzKHN1YnNldF9jbGVhbl9uYW1lc18yKSlcbmBgYCJ9 -->
-<pre class="r"><code>setdiff(names(d3_subset_clean),names(subset_clean_names_2))</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5sb25nXzIwMTUgPC0gbWFrZV9kYXRhX2xvbmcoZGF0YXNldF8yMDE1KVxubG9uZ18yMDE2IDwtIG1ha2VfZGF0YV9sb25nKGRhdGFzZXRfMjAxNilcbmxvbmdfMjAxNyA8LSBtYWtlX2RhdGFfbG9uZyhkYXRhc2V0XzIwMTcpXG5cblxuIyBkb2luZyB0aGlzIGJlZm9yZSBsZW5ndGhlbmluZyB0aGUgZGF0YT8gSSdtIG5vdCBzdXJlIGlmIGl0IG1hdHRlcnMuXG5cbmZpbHRlcmVkX2xvbmdfMjAxNSA8LSByZW1vdmVfZW1wdHlfcm93cyhsb25nXzIwMTUpXG5maWx0ZXJlZF9sb25nXzIwMTYgPC0gcmVtb3ZlX2VtcHR5X3Jvd3MobG9uZ18yMDE2KVxuZmlsdGVyZWRfbG9uZ18yMDE3IDwtIHJlbW92ZV9lbXB0eV9yb3dzKGxvbmdfMjAxNylcblxuXG4jIGNvbnN0cnVjdGUgdGhlIG1lZ2EgZGF0YVxuYWxsX3RoZV9jYW5keSA8LSBiaW5kX3Jvd3MoZmlsdGVyZWRfbG9uZ18yMDE1LFxuICAgICAgICAgIGZpbHRlcmVkX2xvbmdfMjAxNixcbiAgICAgICAgICBmaWx0ZXJlZF9sb25nXzIwMTcpXG5cbmBgYCJ9 -->
+<pre class="r"><code>
+long_2015 &lt;- make_data_long(dataset_2015)
+long_2016 &lt;- make_data_long(dataset_2016)
+long_2017 &lt;- make_data_long(dataset_2017)
+
+
+# doing this before lengthening the data? I&#39;m not sure if it matters.
+
+filtered_long_2015 &lt;- remove_empty_rows(long_2015)
+filtered_long_2016 &lt;- remove_empty_rows(long_2016)
+filtered_long_2017 &lt;- remove_empty_rows(long_2017)
+
+
+# constructe the mega data
+all_the_candy &lt;- bind_rows(filtered_long_2015,
+          filtered_long_2016,
+          filtered_long_2017)
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiZ3JlZW5fcGFydHlfbV9tc1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzJdIFwiaW5kZXBlbmRlbnRfbV9tc1wiICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzNdIFwiYWJzdGFpbmVkX2Zyb21fbV9taW5nXCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuWzRdIFwicmVhbF9ob3VzZXdpdmVzX29mX29yYW5nZV9jb3VudHlfc2Vhc29uXzlfYmx1ZV9yYXlcIlxuWzVdIFwic2FuZHdpY2hfc2l6ZWRfYmFnc19maWxsZWRfd2l0aF9ib29fYmVycnlfY3J1bmNoXCIgIFxuWzZdIFwidGFrZV81XCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxuIn0= -->
-<pre><code>[1] &quot;green_party_m_ms&quot;                                  
-[2] &quot;independent_m_ms&quot;                                  
-[3] &quot;abstained_from_m_ming&quot;                             
-[4] &quot;real_housewives_of_orange_county_season_9_blue_ray&quot;
-[5] &quot;sandwich_sized_bags_filled_with_boo_berry_crunch&quot;  
-[6] &quot;take_5&quot;                                            </code></pre>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVVNBX3BhdHRlcm5zIDwtIFwidVsgLl0qc3xpY2F8c3RhdGV8dHJ1bXB8YXRlc3xkIHN8dGhlIHlvb3xuZXcgeW9ya3xjYWxpZm9ybmlhfHBpdHRzYnVyZ2h8bm9ydGggY2Fyb2xpbmF8bmV3IGplcnNleXxhbWVyY2F8bXVycmlrYXxhbGFza2FcIlxuVUtfcGF0dGVybnMgPC0gXCJ1Wy5dKmt8aW5bZ10qW2RdKm9tfGVuZ2xhbmR8c2NvdGxhbmRcIlxuc3BhaW5fcGF0dGVybnMgPC0gXCJzcGFpbnxlc3BhXCJcbkNhbmFkYV9wYXR0ZXJucyA8LSBcImNhbmFkYVwiXG5uZXRoZXJsYW5kc19wYXR0ZXJucyA8LSBcIm5ldGhlcmxcIlxuXG5hbGxfdGhlX2NhbmR5X2xvd19jb3VudHJ5IDwtIGFsbF90aGVfY2FuZHkgJT4lXG4gIG11dGF0ZShjb3VudHJ5ID0gc3RyX3RvX2xvd2VyKGNvdW50cnkpKVxuXG5hbGxfdGhlX2NhbmR5X2xvd19jb3VudHJ5ICU+JSBcbm11dGF0ZShjb3VudHJ5ID0gY2FzZV93aGVuKFxuICAgIHN0cl9kZXRlY3QoY291bnRyeSwgVVNBX3BhdHRlcm5zKSB+IFwiVVNBXCIsXG4gICAgc3RyX2RldGVjdChjb3VudHJ5LCBVS19wYXR0ZXJucykgfiBcIlVLXCIsXG4gICAgc3RyX2RldGVjdChjb3VudHJ5LCBzcGFpbl9wYXR0ZXJucykgfiBcInNwYWluXCIsXG4gICAgc3RyX2RldGVjdChjb3VudHJ5LCBDYW5hZGFfcGF0dGVybnMpIH4gXCJjYW5hZGFcIixcbiAgICBzdHJfZGV0ZWN0KGNvdW50cnksIG5ldGhlcmxhbmRzX3BhdHRlcm5zKSB+IFwidGhlIG5ldGhlcmxhbmRzXCIsXG4gICAgVFJVRSB+IGNvdW50cnkpKSAlPiUgXG5tdXRhdGUoY291bnRyeSA9IHN0cl90b190aXRsZShjb3VudHJ5KSxcbiAgICAgICBhZ2UgPSBjYXNlX3doZW4oaXMubnVtZXJpYyhjb3VudHJ5KSB+IGNvdW50cnksXG4gICAgICAgICAgICAgICAgICAgICAgIFRSVUUgfiBhZ2UpKVxuYGBgIn0= -->
+<pre class="r"><code>USA_patterns &lt;- &quot;u[ .]*s|ica|state|trump|ates|d s|the yoo|new york|california|pittsburgh|north carolina|new jersey|amerca|murrika|alaska&quot;
+UK_patterns &lt;- &quot;u[.]*k|in[g]*[d]*om|england|scotland&quot;
+spain_patterns &lt;- &quot;spain|espa&quot;
+Canada_patterns &lt;- &quot;canada&quot;
+netherlands_patterns &lt;- &quot;netherl&quot;
+
+all_the_candy_low_country &lt;- all_the_candy %&gt;%
+  mutate(country = str_to_lower(country))
+
+all_the_candy_low_country %&gt;% 
+mutate(country = case_when(
+    str_detect(country, USA_patterns) ~ &quot;USA&quot;,
+    str_detect(country, UK_patterns) ~ &quot;UK&quot;,
+    str_detect(country, spain_patterns) ~ &quot;spain&quot;,
+    str_detect(country, Canada_patterns) ~ &quot;canada&quot;,
+    str_detect(country, netherlands_patterns) ~ &quot;the netherlands&quot;,
+    TRUE ~ country)) %&gt;% 
+mutate(country = str_to_title(country),
+       age = case_when(is.numeric(country) ~ country,
+                       TRUE ~ age))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6IFByb2JsZW0gd2l0aCBgbXV0YXRlKClgIGlucHV0IGBhZ2VgLlxueCBtdXN0IGJlIGEgY2hhcmFjdGVyIHZlY3Rvciwgbm90IGEgZG91YmxlIHZlY3Rvci5cbuKEuSBJbnB1dCBgYWdlYCBpcyBgY2FzZV93aGVuKGlzLm51bWVyaWMoY291bnRyeSkgfiBjb3VudHJ5LCBUUlVFIH4gYWdlKWAuXG5SdW4gYHJsYW5nOjpsYXN0X2Vycm9yKClgIHRvIHNlZSB3aGVyZSB0aGUgZXJyb3Igb2NjdXJyZWQuXG4ifQ== -->
+<pre><code>Error: Problem with `mutate()` input `age`.
+x must be a character vector, not a double vector.
+ℹ Input `age` is `case_when(is.numeric(country) ~ country, TRUE ~ age)`.
+Run `rlang::last_error()` to see where the error occurred.</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0ZGlmZihuYW1lcyhzdWJzZXRfY2xlYW5fbmFtZXNfMiksIG5hbWVzKGQzX3N1YnNldF9jbGVhbikpXG5gYGAifQ== -->
-<pre class="r"><code>setdiff(names(subset_clean_names_2), names(d3_subset_clean))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwibWFyeV9qYW5lc1wiICAgICAgICAgICAgICAgICAgXCJ0aGlyZF9wYXJ0eV9tX21zXCIgICAgICAgICAgICBcInBlcnNvbl9vZl9pbnRlcmVzdF9zZWFzb25fM1wiXG4ifQ== -->
-<pre><code>[1] &quot;mary_janes&quot;                  &quot;third_party_m_ms&quot;            &quot;person_of_interest_season_3&quot;</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKV2hhdCBpcyB0aGUgdG90YWwgbnVtYmVyIG9mIGNhbmR5IHJhdGluZ3MgZ2l2ZW4gYWNyb3NzIHRoZSB0aHJlZSB5ZWFycy4gKG51bWJlcgpvZiBjYW5keSByYXRpbmdzLCBub3QgbnVtYmVyIG9mIHJhdGVycy4gRG9u4oCZdCBjb3VudCBtaXNzaW5nIHZhbHVlcykKCldoYXQgd2FzIHRoZSBhdmVyYWdlIGFnZSBvZiBwZW9wbGUgd2hvIGFyZSBnb2luZyBvdXQgdHJpY2sgb3IgdHJlYXRpbmcgYW5kIHRoZQphdmVyYWdlIGFnZSBvZiBwZW9wbGUgMy4gbm90IGdvaW5nIHRyaWNrIG9yIHRyZWF0aW5nPwoKRm9yIGVhY2ggb2Ygam95LCBkZXNwYWlyIGFuZCBtZWgsIHdoaWNoIGNhbmR5IGJhciByZWNlaXZlZCB0aGUgbW9zdCBvZiB0aGVzZQpyYXRpbmdzPyBIb3cgbWFueSBwZW9wbGUgcmF0ZWQgU3RhcmJ1cnN0IGFzIGRlc3BhaXI/CgoKRm9yIHRoZSBuZXh0IHRocmVlIHF1ZXN0aW9ucywgY291bnQgZGVzcGFpciBhcyAtMSwgam95IGFzICsxIGFuZCBtZWggYXMgMC4KCldoYXQgd2FzIHRoZSBtb3N0IHBvcHVsYXIgY2FuZHkgYmFyIGJ5IHRoaXMgcmF0aW5nIHN5c3RlbSBmb3IgZWFjaCBnZW5kZXIgaW4gdGhlCmRhdGFzZXQ/CldoYXQgd2FzIHRoZSBtb3N0IHBvcHVsYXIgY2FuZHkgYmFyIGluIGVhY2ggeWVhcj8KV2hhdCB3YXMgdGhlIG1vc3QgcG9wdWxhciBjYW5keSBiYXIgYnkgdGhpcyByYXRpbmcgZm9yIHBlb3BsZSBpbiBVUywgQ2FuYWRhLCBVSwphbmQgYWxsIG90aGVyIGNvdW50cmllcz8KCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCgpkYXRhc2V0XzEgPC0gcmVhZHhsOjpyZWFkX3hsc3goImRhdGEvYm9pbmctYm9pbmctY2FuZHktMjAxNS54bHN4IiwgMSkKZGF0YXNldF8yIDwtIHJlYWR4bDo6cmVhZF94bHN4KCJkYXRhL2JvaW5nLWJvaW5nLWNhbmR5LTIwMTYueGxzeCIsIDEpCmRhdGFzZXRfMyA8LSByZWFkeGw6OnJlYWRfeGxzeCgiZGF0YS9ib2luZy1ib2luZy1jYW5keS0yMDE3Lnhsc3giLCAxKQogIApyZWFkeGw6OmV4Y2VsX3NoZWV0cygiZGF0YS9ib2luZy1ib2luZy1jYW5keS0yMDE3Lnhsc3giKQoKYGBgCgpgYGB7cn0KY2xlYW5fbmFtZXMgPC0gZGF0YXNldF8xICU+JSAKICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpCgpzdWJzZXRfY2xlYW5fbmFtZXMgPC0gY2xlYW5fbmFtZXMgJT4lIAogIHNlbGVjdCgtdGltZXN0YW1wICYgIXN0YXJ0c193aXRoKCJwbGVhc2UiKSAmCiAgICAgICAgICFzdGFydHNfd2l0aCgiY2hlY2tfYWxsIikgJgogICAgICAgICAhc3RhcnRzX3dpdGgoImJldHR5IikgJgogICAgICAgICAhc3RhcnRzX3dpdGgoInRoYXRfZHJlc3NfdGhhdCIpICYKICAgICAgICAgIXN0YXJ0c193aXRoKCJmaWxsX2luIikgJgogICAgICAgICAhY29udGFpbnMoImZhdm91cml0ZV9mb250IikgJgogICAgICAgICAhc3RhcnRzX3dpdGgoIndoaWNoX2RheSIpICYKICAgICAgICAgIXN0YXJ0c193aXRoKCJndWVzcyIpICYKICAgICAgICAgIXN0YXJ0c193aXRoKCJpZl95b3Vfc3F1aW50IikpICU+JSAKICByZW5hbWUoYWdlID0gaG93X29sZF9hcmVfeW91LAogICAgICAgICBnb2luZ19vdXQgPSBhcmVfeW91X2dvaW5nX2FjdHVhbGx5X2dvaW5nX3RyaWNrX29yX3RyZWF0aW5nX3lvdXJzZWxmLAogICAgICAgICBoZXJzaGV5c19kYXJrX2Nob2NvbGF0ZSA9IGRhcmtfY2hvY29sYXRlX2hlcnNoZXksCiAgICAgICAgIGhlcnNoZXlzX21pbGtfY2hvY29sYXRlID0gaGVyc2hleV9zX21pbGtfY2hvY29sYXRlLAogICAgICAgICBoZXJzaGV5c19raXNzYWJsZXMgPSBoZXJzaGV5X3Nfa2lzc2FibGVzLAogICAgICAgICBwZWFudXRfbV9tcyA9IHBlYW51dF9tX21fcywKICAgICAgICAgYm9ua2Vyc190aGVfY2FuZHkgPSBib25rZXJzLAogICAgICAgICBzZWFfc2FsdF9mbGF2b3JlZF9zdHVmZiA9IHNlYV9zYWx0X2ZsYXZvcmVkX3N0dWZmX3Byb2JhYmx5X2Nob2NvbGF0ZV9zaW5jZV90aGlzX2lzX3RoZV9pdF9mbGF2b3Jfb2ZfdGhlX3llYXIpICU+JQogIG11dGF0ZShhZ2UgPSBhcy5pbnRlZ2VyKGFnZSkpCmBgYAoKYGBge3J9CmNsZWFuX25hbWVzMiA8LSBkYXRhc2V0XzIgJT4lIAogIGphbml0b3I6OmNsZWFuX25hbWVzKCkKCnN1YnNldF9jbGVhbl9uYW1lc18yIDwtIGNsZWFuX25hbWVzMiAlPiUKICByZW5hbWUoY291bnRyeSA9IHdoaWNoX2NvdW50cnlfZG9feW91X2xpdmVfaW4sCiAgICAgICAgIGFnZSA9IGhvd19vbGRfYXJlX3lvdSwKICAgICAgICAgZ2VuZGVyID0geW91cl9nZW5kZXIsCiAgICAgICAgIGdvaW5nX291dCA9IGFyZV95b3VfZ29pbmdfYWN0dWFsbHlfZ29pbmdfdHJpY2tfb3JfdHJlYXRpbmdfeW91cnNlbGYsCiAgICAgICAgIGxpY29yaWNlID0gbGljb3JpY2VfeWVzX2JsYWNrLAogICAgICAgICBwZXJzb25fb2ZfaW50ZXJlc3Rfc2Vhc29uXzMgPQogICAgICAgICAgIHBlcnNvbl9vZl9pbnRlcmVzdF9zZWFzb25fM19kdmRfYm94X3NldF9ub3RfaW5jbHVkaW5nX2Rpc2NfNF93aXRoX2hpbGFyaW91c19vdXR0YWtlcywKICAgICAgICAgYm94X29fcmFpc2lucyA9IGJveG9fcmFpc2lucywKICAgICAgICAgcGVhbnV0X21fbXMgPSBwZWFudXRfbV9tX3MsCiAgICAgICAgIHN3ZWV0dW1zID0gc3dlZXR1bXNfYV9mcmllbmRfdG9fZGlhYmV0ZXMsCiAgICAgICAgIGhlcnNoZXlzX21pbGtfY2hvY29sYXRlID0gaGVyc2hleV9zX21pbGtfY2hvY29sYXRlCiAgICAgICAgICkgJT4lIAogIHNlbGVjdCgtdGltZXN0YW1wICYKICAgICAgICAgICAhc3RhcnRzX3dpdGgoIndoaWNoIikgJgogICAgICAgICAgICFzdGFydHNfd2l0aCgicGxlYXNlIikgJgogICAgICAgICAgICFzdGFydHNfd2l0aCgiYmV0dHkiKSAmCiAgICAgICAgICAgIXN0YXJ0c193aXRoKCJ0aGF0X2RyZXNzIikgJgogICAgICAgICAgICFjb250YWlucygiZmF2b3VyaXRlX2ZvbnQiKSAmCiAgICAgICAgICAgIXN0YXJ0c193aXRoKCJkb195b3UiKSAmCiAgICAgICAgICAgIXN0YXJ0c193aXRoKCJndWVzcyIpICYKICAgICAgICAgICAhc3RhcnRzX3dpdGgoIndoZW5feW91IikgJgogICAgICAgICAgICFjb250YWlucygiaWdub3JlIikpICU+JQogIG11dGF0ZShhZ2UgPSBhcy5pbnRlZ2VyKGFnZSkpCgpgYGAKCmBgYHtyfQpzZXRkaWZmKG5hbWVzKHN1YnNldF9jbGVhbl9uYW1lcyksIG5hbWVzKHN1YnNldF9jbGVhbl9uYW1lc18yKSkKYGBgCgpgYGB7cn0Kc2V0ZGlmZihuYW1lcyhzdWJzZXRfY2xlYW5fbmFtZXNfMiksIG5hbWVzKHN1YnNldF9jbGVhbl9uYW1lcykpCmBgYAoKCmBgYHtyfQpjbGVhbl9uYW1lczMgPC0gZGF0YXNldF8zICU+JSAKICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpCgpkM19zdWJzZXRfY2xlYW4gPC0gY2xlYW5fbmFtZXMzICU+JSAKICBzZWxlY3Qoc3RhcnRzX3dpdGgoInEiKSkKCm5hbWVzKGQzX3N1YnNldF9jbGVhbikgPC0gc3RyX3JlbW92ZShuYW1lcyhkM19zdWJzZXRfY2xlYW4pLCAicVswLTldK18iKQoKZDNfc3Vic2V0X2NsZWFuIDwtIGQzX3N1YnNldF9jbGVhbiAlPiUgCiAgc2VsZWN0KC1zdGF0ZV9wcm92aW5jZV9jb3VudHlfZXRjICYKICAgICAgICAgIXN0YXJ0c193aXRoKCJtZWRpYSIpICYgCiAgICAgICAgICAgLWRyZXNzLCAtam95X290aGVyLCAtZGVzcGFpcl9vdGhlciwgLW90aGVyX2NvbW1lbnRzLCAtZGF5KSAlPiUgCiAgcmVuYW1lKGFub255bW91c19icm93bl9nbG9ic190aGF0X2NvbWVfaW5fYmxhY2tfYW5kX29yYW5nZV93cmFwcGVycyA9CiAgICAgICAgIGFub255bW91c19icm93bl9nbG9ic190aGF0X2NvbWVfaW5fYmxhY2tfYW5kX29yYW5nZV93cmFwcGVyc19hX2tfYV9tYXJ5X2phbmVzLAogICAgICAgICBwZWFudXRfbV9tcyA9IHBlYW51dF9tX21fcywKICAgICAgICAgYm94X29fcmFpc2lucyA9IGJveG9fcmFpc2lucywKICAgICAgICAgaGVyc2hleXNfbWlsa19jaG9jb2xhdGUgPSBoZXJzaGV5X3NfbWlsa19jaG9jb2xhdGUsCiAgICAgICAgIGxpY29yaWNlID0gbGljb3JpY2VfeWVzX2JsYWNrLAogICAgICAgICBzd2VldHVtcyA9IHN3ZWV0dW1zX2FfZnJpZW5kX3RvX2RpYWJldGVzLAogICAgeDEwMF9ncmFuZF9iYXIgPSAiMTAwX2dyYW5kX2JhciIpCiAgICAgICAgIAogICAgICAgICAKYGBgCgpgYGB7cn0Kc2V0ZGlmZihuYW1lcyhkM19zdWJzZXRfY2xlYW4pLG5hbWVzKHN1YnNldF9jbGVhbl9uYW1lc18yKSkKYGBgCgpgYGB7cn0Kc2V0ZGlmZihuYW1lcyhzdWJzZXRfY2xlYW5fbmFtZXNfMiksIG5hbWVzKGQzX3N1YnNldF9jbGVhbikpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKV2hhdCBpcyB0aGUgdG90YWwgbnVtYmVyIG9mIGNhbmR5IHJhdGluZ3MgZ2l2ZW4gYWNyb3NzIHRoZSB0aHJlZSB5ZWFycy4gKG51bWJlcgpvZiBjYW5keSByYXRpbmdzLCBub3QgbnVtYmVyIG9mIHJhdGVycy4gRG9u4oCZdCBjb3VudCBtaXNzaW5nIHZhbHVlcykKCldoYXQgd2FzIHRoZSBhdmVyYWdlIGFnZSBvZiBwZW9wbGUgd2hvIGFyZSBnb2luZyBvdXQgdHJpY2sgb3IgdHJlYXRpbmcgYW5kIHRoZQphdmVyYWdlIGFnZSBvZiBwZW9wbGUgMy4gbm90IGdvaW5nIHRyaWNrIG9yIHRyZWF0aW5nPwoKRm9yIGVhY2ggb2Ygam95LCBkZXNwYWlyIGFuZCBtZWgsIHdoaWNoIGNhbmR5IGJhciByZWNlaXZlZCB0aGUgbW9zdCBvZiB0aGVzZQpyYXRpbmdzPyBIb3cgbWFueSBwZW9wbGUgcmF0ZWQgU3RhcmJ1cnN0IGFzIGRlc3BhaXI/CgoKRm9yIHRoZSBuZXh0IHRocmVlIHF1ZXN0aW9ucywgY291bnQgZGVzcGFpciBhcyAtMSwgam95IGFzICsxIGFuZCBtZWggYXMgMC4KCldoYXQgd2FzIHRoZSBtb3N0IHBvcHVsYXIgY2FuZHkgYmFyIGJ5IHRoaXMgcmF0aW5nIHN5c3RlbSBmb3IgZWFjaCBnZW5kZXIgaW4gdGhlCmRhdGFzZXQ/CldoYXQgd2FzIHRoZSBtb3N0IHBvcHVsYXIgY2FuZHkgYmFyIGluIGVhY2ggeWVhcj8KV2hhdCB3YXMgdGhlIG1vc3QgcG9wdWxhciBjYW5keSBiYXIgYnkgdGhpcyByYXRpbmcgZm9yIHBlb3BsZSBpbiBVUywgQ2FuYWRhLCBVSwphbmQgYWxsIG90aGVyIGNvdW50cmllcz8KCgpgYGB7ciwgbWVzc2FnZSA9IEZBTFNFfQpsaWJyYXJ5KHRpZHl2ZXJzZSkKCmRhdGFzZXRfMjAxNSA8LSByZWFkX2NzdigiZGF0YS9jbGVhbl9kYXRhL2NhbmR5XzIwMTUuY3N2IikKZGF0YXNldF8yMDE2IDwtIHJlYWRfY3N2KCJkYXRhL2NsZWFuX2RhdGEvY2FuZHlfMjAxNi5jc3YiKQpkYXRhc2V0XzIwMTcgPC0gcmVhZF9jc3YoImRhdGEvY2xlYW5fZGF0YS9jYW5keV8yMDE3LmNzdiIpCgpgYGAKCgpgYGB7cn0KCm1ha2VfZGF0YV9sb25nIDwtIGZ1bmN0aW9uICh3aWRlX2RhdGEpIHsKICBsb25nX2RhdGEgPC0gd2lkZV9kYXRhICU+JSAKICAgIHBpdm90X2xvbmdlcigteWVhciAmIC1nb2luZ19vdXQgJiAtZ2VuZGVyICYgLWFnZSAmIC1jb3VudHJ5LAogICAgICAgICAgICAgICBuYW1lc190byA9ICJjYW5keSIsCiAgICAgICAgICAgICAgIHZhbHVlc190byA9ICJyZWFjdGlvbiIpICU+JQogIHNlbGVjdCh5ZWFyLCBhZ2UsIGdlbmRlciwgY291bnRyeSwgZ29pbmdfb3V0LCBjYW5keSwgcmVhY3Rpb24pCn0KCnJlbW92ZV9lbXB0eV9yb3dzIDwtIGZ1bmN0aW9uKGRhdGEpIHsKICBmaWx0ZXJlZF9kYXRhIDwtIGRhdGEgJT4lIAogICAgZmlsdGVyKCEoaXMubmEoZ29pbmdfb3V0KSAmCiAgICAgICAgICAgaXMubmEoZ2VuZGVyKSAmCiAgICAgICAgICAgaXMubmEoYWdlKSAmCiAgICAgICAgICAgaXMubmEoY291bnRyeSkgJgogICAgICAgICAgIGlzLm5hKHJlYWN0aW9uKSkpCiAgICAKfQogICAgICAgICAKICAgICAgICAgCmBgYAoKYGBge3J9Cgpsb25nXzIwMTUgPC0gbWFrZV9kYXRhX2xvbmcoZGF0YXNldF8yMDE1KQpsb25nXzIwMTYgPC0gbWFrZV9kYXRhX2xvbmcoZGF0YXNldF8yMDE2KQpsb25nXzIwMTcgPC0gbWFrZV9kYXRhX2xvbmcoZGF0YXNldF8yMDE3KQoKCiMgZG9pbmcgdGhpcyBiZWZvcmUgbGVuZ3RoZW5pbmcgdGhlIGRhdGE/IEknbSBub3Qgc3VyZSBpZiBpdCBtYXR0ZXJzLgoKZmlsdGVyZWRfbG9uZ18yMDE1IDwtIHJlbW92ZV9lbXB0eV9yb3dzKGxvbmdfMjAxNSkKZmlsdGVyZWRfbG9uZ18yMDE2IDwtIHJlbW92ZV9lbXB0eV9yb3dzKGxvbmdfMjAxNikKZmlsdGVyZWRfbG9uZ18yMDE3IDwtIHJlbW92ZV9lbXB0eV9yb3dzKGxvbmdfMjAxNykKCgojIGNvbnN0cnVjdGUgdGhlIG1lZ2EgZGF0YQphbGxfdGhlX2NhbmR5IDwtIGJpbmRfcm93cyhmaWx0ZXJlZF9sb25nXzIwMTUsCiAgICAgICAgICBmaWx0ZXJlZF9sb25nXzIwMTYsCiAgICAgICAgICBmaWx0ZXJlZF9sb25nXzIwMTcpCgpgYGAKCmBgYHtyfQpVU0FfcGF0dGVybnMgPC0gInVbIC5dKnN8aWNhfHN0YXRlfHRydW1wfGF0ZXN8ZCBzfHRoZSB5b298bmV3IHlvcmt8Y2FsaWZvcm5pYXxwaXR0c2J1cmdofG5vcnRoIGNhcm9saW5hfG5ldyBqZXJzZXl8YW1lcmNhfG11cnJpa2F8YWxhc2thIgpVS19wYXR0ZXJucyA8LSAidVsuXSprfGluW2ddKltkXSpvbXxlbmdsYW5kfHNjb3RsYW5kIgpzcGFpbl9wYXR0ZXJucyA8LSAic3BhaW58ZXNwYSIKQ2FuYWRhX3BhdHRlcm5zIDwtICJjYW5hZGEiCm5ldGhlcmxhbmRzX3BhdHRlcm5zIDwtICJuZXRoZXJsIgoKYWxsX3RoZV9jYW5keV9sb3dfY291bnRyeSA8LSBhbGxfdGhlX2NhbmR5ICU+JQogIG11dGF0ZShjb3VudHJ5ID0gc3RyX3RvX2xvd2VyKGNvdW50cnkpKQoKYWxsX3RoZV9jYW5keV9sb3dfY291bnRyeSAlPiUgCm11dGF0ZShjb3VudHJ5ID0gY2FzZV93aGVuKAogICAgc3RyX2RldGVjdChjb3VudHJ5LCBVU0FfcGF0dGVybnMpIH4gIlVTQSIsCiAgICBzdHJfZGV0ZWN0KGNvdW50cnksIFVLX3BhdHRlcm5zKSB+ICJVSyIsCiAgICBzdHJfZGV0ZWN0KGNvdW50cnksIHNwYWluX3BhdHRlcm5zKSB+ICJzcGFpbiIsCiAgICBzdHJfZGV0ZWN0KGNvdW50cnksIENhbmFkYV9wYXR0ZXJucykgfiAiY2FuYWRhIiwKICAgIHN0cl9kZXRlY3QoY291bnRyeSwgbmV0aGVybGFuZHNfcGF0dGVybnMpIH4gInRoZSBuZXRoZXJsYW5kcyIsCiAgICBUUlVFIH4gY291bnRyeSkpICU+JSAKbXV0YXRlKGNvdW50cnkgPSBzdHJfdG9fdGl0bGUoY291bnRyeSksCiAgICAgICBhZ2UgPSBjYXNlX3doZW4oCiAgICAgICAgaXMubnVtZXJpYyhjb3VudHJ5KSB+IGNvdW50cnksCiAgICAgICAgVFJVRSB+IGFnZSkpCmBgYAoKYGBge3J9CgpgYGAKCg==</div>
 
 
 

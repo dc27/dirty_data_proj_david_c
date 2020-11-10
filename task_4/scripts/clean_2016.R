@@ -35,7 +35,13 @@ make_data2_clean <- function(dirty_data) {
     select(!starts_with("which"))
   
   subset_clean_names_and_age <- subset_clean_better_var_names %>% 
-    mutate(age = as.integer(age))
+    mutate(age = as.integer(age),
+           year = 2016) %>% 
+    mutate(going_out = as.logical(
+      case_when(
+        going_out == "Yes" ~ TRUE,
+        going_out == "No" ~ FALSE,
+        TRUE ~ NA)))
   
   subset_clean_names_and_age %>%
     write_csv("data/clean_data/candy_2016.csv")
