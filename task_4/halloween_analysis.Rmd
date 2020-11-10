@@ -1,25 +1,7 @@
 ---
-title: "R Notebook"
+title: "Halloween Candy Analysis"
 output: html_notebook
 ---
-
-What is the total number of candy ratings given across the three years. (number
-of candy ratings, not number of raters. Don’t count missing values)
-
-What was the average age of people who are going out trick or treating and the
-average age of people not going trick or treating?
-
-For each of joy, despair and meh, which candy bar received the most of these
-ratings? How many people rated Starburst as despair?
-
-
-For the next three questions, count despair as -1, joy as +1 and meh as 0.
-
-What was the most popular candy bar by this rating system for each gender in the
-dataset?
-What was the most popular candy bar in each year?
-What was the most popular candy bar by this rating for people in US, Canada, UK
-and all other countries?
 
 
 ```{r, message = FALSE}
@@ -32,74 +14,127 @@ candy_data <- read_csv("data/clean_data/all_candy.csv", col_types = cols(
 
 ```
 
-1.
+### What is the total number of candy ratings given across the three years?
+
+The question asks us to count the number of candy ratings, discounting any NAs.
 ```{r}
-candy_data %>%
+n_ratings <- candy_data %>%
   filter(!is.na(reaction)) %>% 
   nrow()
 ```
+After the filtering any NA reactions: the total number of candy ratings across
+the three years is: *
+```{r, echo=FALSE, eval=TRUE}
+n_ratings
+```
 
+### What was the average age of people who are going out trick or treating?
 
-2.
+The data has a variable `going_out` which relates to whether or not people went
+trick or treating. TRUE indicates they went out.
+
+Filtering the data for the case when `going_out` is TRUE gives the subset of
+people who went trick or treating. Then looking at one candy that appears every
+year (this way each person will appear in the data only once), the data can be
+summarised and the average age can be found.
 ```{r}
-candy_data %>% 
+average_age_extroverts <- candy_data %>% 
   filter(going_out == TRUE) %>%
   filter(candy == "snickers") %>% 
   select(age) %>%
-  summarise(average_age = mean(age, na.rm = TRUE))
+  summarise(average_age = mean(age, na.rm = TRUE)) %>% 
+  pull()
 ```
 
+The average age of trick or treaters across all three years was found to be:
+
+```{r, echo=FALSE, eval=TRUE}
+average_age_extroverts
+```
+### How does this compare to the average age of people who stay inside?
+
+The process is the same as previously, but filtering `going_out` is FALSE -
+indicating the person did not go trick or treating.
 
 ```{r}
-candy_data %>% 
+average_age_introverts <- candy_data %>% 
   filter(going_out == FALSE) %>%
   filter(candy == "snickers") %>% 
   select(age) %>%
-  summarise(average_age = mean(age, na.rm = TRUE))
+  summarise(average_age = mean(age, na.rm = TRUE)) %>% 
+  pull()
 ```
 
+The average age of people who did not go trick or treating was:
 
-3.
+```{r, echo=FALSE, eval=TRUE}
+average_age_introverts
+```
+### For each of joy, despair, and meh, which candy bar revived the most of these ratings?
+
+Calculation process:
+
+The data has a variable `reaction` which relates to the ratings of the question.
+i.e. joy, despair, and meh. By filtering this column, the total reactions of
+each type can be calculated.
+
+To calculate only the reactions of joy:
 ```{r}
-candy_data %>% 
+only_joy <- candy_data %>% 
   filter(reaction == "JOY") %>% 
   add_count(candy) %>% 
   group_by(candy) %>%
-  summarise(joyful_reactions = mean(n)) %>% 
+  summarise(joyful_reactions = mean(n), .groups = 'drop') %>% 
   arrange(desc(joyful_reactions))
 ```
-
+To calculate only the reactions of "meh":
 ```{r}
-candy_data %>% 
+only_apathy <- candy_data %>% 
   filter(reaction == "MEH") %>% 
   add_count(candy) %>% 
   group_by(candy) %>%
-  summarise(mehful_reactions = mean(n)) %>% 
+  summarise(mehful_reactions = mean(n), .groups = 'drop') %>% 
   arrange(desc(mehful_reactions))
 ```
-
+To calculate only the reactions of despair
 ```{r}
-
-candy_data %>% 
+only_despair <- candy_data %>% 
   filter(reaction == "DESPAIR") %>% 
   add_count(candy) %>% 
   group_by(candy) %>%
-  summarise(woeful_reactions = mean(n)) %>% 
+  summarise(woeful_reactions = mean(n), .groups = 'drop') %>% 
   arrange(desc(woeful_reactions))
 ```
 
+### How many people rated Starburst as despair?
+
 ```{r}
-candy_data %>% 
+saddened_by_starburst <- candy_data %>% 
   filter(reaction == "DESPAIR",
          candy == "starburst") %>% 
   nrow()
-
 ```
-What was the most popular candy bar by this rating system for each gender in the
-dataset?
+
+
 
 ```{r}
-candy_data %>% 
+saddened_by_starburst
+```
+
+<hr>
+
+For the next three questions apply the following conversion:
+
+|Reaction|Scoring|
+|---|---|
+|Joy| 1|
+|Despair|-1|
+|Meh| 0|
+
+### What was the most popular candy bar  for each gender in the dataset?
+
+```{r}
+favourites_by_gender <- candy_data %>% 
   select(candy, gender, reaction) %>%
   mutate(reaction = case_when(
     reaction == "JOY" ~ 1,
@@ -107,15 +142,23 @@ candy_data %>%
     TRUE ~ 0
   )) %>% 
   group_by(gender, candy) %>% 
-  summarise(score = sum(reaction)) %>% 
-  slice_max(score)
+  summarise(score = sum(reaction), .groups = 'drop_last' ) %>% 
+  slice_max(score, n = 2)
 ```
 
-What was the most popular candy bar in each year?
-What was the most popular candy bar by this rating for people in US, Canada, UK
-and all other countries?
 ```{r}
-candy_data %>% 
+favourites_by_gender
+```
+
+### What was the most popular candy bar in each year?
+
+To find the highest scoring candy for each year, the process is similar to
+above. Selecting year and then grouping by candy, a score for each can be
+calculated with `sum` and then a slice can be taken to see the highest scorers.
+
+
+```{r}
+favourites_by_year <- candy_data %>% 
   select(candy, year, reaction) %>%
   mutate(reaction = case_when(
     reaction == "JOY" ~ 1,
@@ -123,11 +166,27 @@ candy_data %>%
     TRUE ~ 0
   )) %>% 
   group_by(year, candy) %>% 
-  summarise(score = sum(reaction)) %>% 
-  slice_max(score)
+  summarise(score = sum(reaction), .groups = 'drop_last') %>% 
+  slice_max(score, n = 2)
 ```
+
+The top 2 are listed. "any full sized candy bar" is a common high scorer.
+```{r, echo=FALSE, eval=TRUE}
+favourites_by_year
+```
+
+
+### What was the most popular candy bar for people in US, Canada, UK and all other countries?
+
+The rating process is the same as before. This time the country column is
+selected. The data has already been wrangled into the three desired countries,
+other countries, and NA (where either no country was provided, or there was an
+error with the entry.) Again grouping for each distinct candy and then taking a
+slice of the summary, the highest scoring candies for each country can be
+examined.
+
 ```{r}
-candy_data %>% 
+favourites_by_country <- candy_data %>% 
   select(candy, country, reaction) %>% 
   mutate(reaction = case_when(
     reaction == "JOY" ~ 1,
@@ -135,12 +194,15 @@ candy_data %>%
     TRUE ~ 0
   )) %>% 
   group_by(country, candy) %>% 
-  summarise(score = sum(reaction)) %>% 
-  slice_max(score)
-  
+  summarise(score = sum(reaction), .groups = 'drop_last') %>% 
+  slice_max(score, n = 2, with_ties = FALSE)
 ```
 
-```{r}
-candy_data %>% 
+The question asked for the top 1 candy, but the top two have been included since
+"any full sized candy bar" has a high score in every country category.
+
+```{r, eval=TRUE, echo=FALSE}
+favourites_by_country
 ```
+
 

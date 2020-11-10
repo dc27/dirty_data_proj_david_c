@@ -1,9 +1,16 @@
+# load in the tidyverse and each of the datasets
+# there is one dataset per year
+
 library(tidyverse)
+library(assertr)
 
 dataset_2015 <- read_csv("data/clean_data/candy_2015.csv")
 dataset_2016 <- read_csv("data/clean_data/candy_2016.csv")
 dataset_2017 <- read_csv("data/clean_data/candy_2017.csv")
 
+
+# function that takes the wide data (with many columns that refer to candies)
+# and produces a long data (where candy is now one column with many candy types)
 make_data_long <- function (wide_data) {
   long_data <- wide_data %>% 
     pivot_longer(-year & -going_out & -gender & -age & -country,
@@ -12,6 +19,8 @@ make_data_long <- function (wide_data) {
     select(year, age, gender, country, going_out, candy, reaction)
 }
 
+# some rows have no observations for any candy, and include no gender, age, or
+# country information
 remove_empty_rows <- function(data) {
   filtered_data <- data %>% 
     filter(!(is.na(going_out) &
@@ -21,37 +30,46 @@ remove_empty_rows <- function(data) {
                is.na(reaction)))
 }
 
-long_2015 <- make_data_long(dataset_2015)
-long_2016 <- make_data_long(dataset_2016)
-long_2017 <- make_data_long(dataset_2017)
+make_data_tidy <- function(dataset) {
+  long_data <- make_data_long(dataset)
+  filtered_long_data <- remove_empty_rows(long_data)
+}
 
-filtered_long_2015 <- remove_empty_rows(long_2015)
-filtered_long_2016 <- remove_empty_rows(long_2016)
-filtered_long_2017 <- remove_empty_rows(long_2017)
+# process each dataset
+# 
+tidy_2015 <- make_data_tidy(dataset_2015)
+tidy_2016 <- make_data_tidy(dataset_2016)
+tidy_2017 <- make_data_tidy(dataset_2017)
 
-all_candy <- bind_rows(filtered_long_2015,
-                       filtered_long_2016,
-                       filtered_long_2017)
+  # bind the tidy datasets
+all_candy <- bind_rows(tidy_2015, tidy_2016, tidy_2017)
 
 
+# final wrangling - countries
+# 
+# declare country-specific patterns
 USA_patterns <- "u[ .]*s|ica|state|trump|ates|d s|the yoo|new york|california|pittsburgh|north carolina|new jersey|amerca|murrika|alaska"
 UK_patterns <- "u[.]*k|in[g]*[d]*om|england|scotland"
-spain_patterns <- "spain|espa"
 Canada_patterns <- "canada"
-netherlands_patterns <- "netherl"
-countries <- "CANADA|USA|UK"
 
+# convert countries to lower case for easier wrangling
 all_candy_low_country <- all_candy %>%
   mutate(country = str_to_lower(country))
 
+# collate countries that fit patterns
 all_candy_tidy <- all_candy_low_country %>% 
   mutate(country = case_when(
     str_detect(country, USA_patterns) ~ "USA",
     str_detect(country, UK_patterns) ~ "UK",
-    str_detect(country, spain_patterns) ~ "spain",
     str_detect(country, Canada_patterns) ~ "canada",
-    str_detect(country, netherlands_patterns) ~ "the netherlands",
-    TRUE ~ country)) %>% 
+    TRUE ~ country))
+
+countries <- "CANADA|USA|UK"
+
+# convert countries to upper case, only allow ages within a certain range
+# in some case age has been entered into the country column, extract where there
+# is no information for age but there is a number in the country column
+all_candy_tidy <- all_candy_tidy %>% 
   mutate(country = str_to_upper(country)) %>% 
   mutate(age = case_when(
     is.na(age) ~ as.integer(country),
@@ -60,6 +78,9 @@ all_candy_tidy <- all_candy_low_country %>%
   mutate(age = ifelse(age > 111 | age < 6, NA, age)) %>% 
   mutate(country = ifelse(str_detect(country, countries), country, "OTHER"))
 
+
+# save the big and clean and tidy dataset for analysis
 all_candy_tidy %>%
   write_csv("data/clean_data/all_candy.csv")
+
 
