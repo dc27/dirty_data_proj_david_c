@@ -7,7 +7,7 @@ What is the total number of candy ratings given across the three years. (number
 of candy ratings, not number of raters. Don’t count missing values)
 
 What was the average age of people who are going out trick or treating and the
-average age of people 3. not going trick or treating?
+average age of people not going trick or treating?
 
 For each of joy, despair and meh, which candy bar received the most of these
 ratings? How many people rated Starburst as despair?
@@ -25,82 +25,122 @@ and all other countries?
 ```{r, message = FALSE}
 library(tidyverse)
 
-dataset_2015 <- read_csv("data/clean_data/candy_2015.csv")
-dataset_2016 <- read_csv("data/clean_data/candy_2016.csv")
-dataset_2017 <- read_csv("data/clean_data/candy_2017.csv")
+candy_data <- read_csv("data/clean_data/all_candy.csv", col_types = cols(
+  gender = col_character(),
+  country = col_character()
+))
 
+```
+
+1.
+```{r}
+candy_data %>%
+  filter(!is.na(reaction)) %>% 
+  nrow()
+```
+
+
+2.
+```{r}
+candy_data %>% 
+  filter(going_out == TRUE) %>%
+  filter(candy == "snickers") %>% 
+  select(age) %>%
+  summarise(average_age = mean(age, na.rm = TRUE))
 ```
 
 
 ```{r}
+candy_data %>% 
+  filter(going_out == FALSE) %>%
+  filter(candy == "snickers") %>% 
+  select(age) %>%
+  summarise(average_age = mean(age, na.rm = TRUE))
+```
 
-make_data_long <- function (wide_data) {
-  long_data <- wide_data %>% 
-    pivot_longer(-year & -going_out & -gender & -age & -country,
-               names_to = "candy",
-               values_to = "reaction") %>%
-  select(year, age, gender, country, going_out, candy, reaction)
-}
 
-remove_empty_rows <- function(data) {
-  filtered_data <- data %>% 
-    filter(!(is.na(going_out) &
-           is.na(gender) &
-           is.na(age) &
-           is.na(country) &
-           is.na(reaction)))
-    
-}
-         
-         
+3.
+```{r}
+candy_data %>% 
+  filter(reaction == "JOY") %>% 
+  add_count(candy) %>% 
+  group_by(candy) %>%
+  summarise(joyful_reactions = mean(n)) %>% 
+  arrange(desc(joyful_reactions))
+```
+
+```{r}
+candy_data %>% 
+  filter(reaction == "MEH") %>% 
+  add_count(candy) %>% 
+  group_by(candy) %>%
+  summarise(mehful_reactions = mean(n)) %>% 
+  arrange(desc(mehful_reactions))
 ```
 
 ```{r}
 
-long_2015 <- make_data_long(dataset_2015)
-long_2016 <- make_data_long(dataset_2016)
-long_2017 <- make_data_long(dataset_2017)
-
-
-# doing this before lengthening the data? I'm not sure if it matters.
-
-filtered_long_2015 <- remove_empty_rows(long_2015)
-filtered_long_2016 <- remove_empty_rows(long_2016)
-filtered_long_2017 <- remove_empty_rows(long_2017)
-
-
-# constructe the mega data
-all_the_candy <- bind_rows(filtered_long_2015,
-          filtered_long_2016,
-          filtered_long_2017)
-
+candy_data %>% 
+  filter(reaction == "DESPAIR") %>% 
+  add_count(candy) %>% 
+  group_by(candy) %>%
+  summarise(woeful_reactions = mean(n)) %>% 
+  arrange(desc(woeful_reactions))
 ```
 
 ```{r}
-USA_patterns <- "u[ .]*s|ica|state|trump|ates|d s|the yoo|new york|california|pittsburgh|north carolina|new jersey|amerca|murrika|alaska"
-UK_patterns <- "u[.]*k|in[g]*[d]*om|england|scotland"
-spain_patterns <- "spain|espa"
-Canada_patterns <- "canada"
-netherlands_patterns <- "netherl"
+candy_data %>% 
+  filter(reaction == "DESPAIR",
+         candy == "starburst") %>% 
+  nrow()
 
-all_the_candy_low_country <- all_the_candy %>%
-  mutate(country = str_to_lower(country))
+```
+What was the most popular candy bar by this rating system for each gender in the
+dataset?
 
-all_the_candy_low_country %>% 
-mutate(country = case_when(
-    str_detect(country, USA_patterns) ~ "USA",
-    str_detect(country, UK_patterns) ~ "UK",
-    str_detect(country, spain_patterns) ~ "spain",
-    str_detect(country, Canada_patterns) ~ "canada",
-    str_detect(country, netherlands_patterns) ~ "the netherlands",
-    TRUE ~ country)) %>% 
-mutate(country = str_to_title(country),
-       age = case_when(
-        is.numeric(country) ~ country,
-        TRUE ~ age))
+```{r}
+candy_data %>% 
+  select(candy, gender, reaction) %>%
+  mutate(reaction = case_when(
+    reaction == "JOY" ~ 1,
+    reaction == "DESPAIR" ~ -1,
+    TRUE ~ 0
+  )) %>% 
+  group_by(gender, candy) %>% 
+  summarise(score = sum(reaction)) %>% 
+  slice_max(score)
+```
+
+What was the most popular candy bar in each year?
+What was the most popular candy bar by this rating for people in US, Canada, UK
+and all other countries?
+```{r}
+candy_data %>% 
+  select(candy, year, reaction) %>%
+  mutate(reaction = case_when(
+    reaction == "JOY" ~ 1,
+    reaction == "DESPAIR" ~ -1,
+    TRUE ~ 0
+  )) %>% 
+  group_by(year, candy) %>% 
+  summarise(score = sum(reaction)) %>% 
+  slice_max(score)
+```
+```{r}
+candy_data %>% 
+  select(candy, country, reaction) %>% 
+  mutate(reaction = case_when(
+    reaction == "JOY" ~ 1,
+    reaction == "DESPAIR" ~ -1,
+    TRUE ~ 0
+  )) %>% 
+  group_by(country, candy) %>% 
+  summarise(score = sum(reaction)) %>% 
+  slice_max(score)
+  
 ```
 
 ```{r}
-
+candy_data %>% 
 ```
 
