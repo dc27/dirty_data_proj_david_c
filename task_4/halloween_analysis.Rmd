@@ -11,6 +11,8 @@ average age of people 3. not going trick or treating?
 
 For each of joy, despair and meh, which candy bar received the most of these
 ratings? How many people rated Starburst as despair?
+
+
 For the next three questions, count despair as -1, joy as +1 and meh as 0.
 
 What was the most popular candy bar by this rating system for each gender in the
@@ -36,7 +38,7 @@ clean_names <- dataset_1 %>%
   janitor::clean_names()
 
 subset_clean_names <- clean_names %>% 
-  select(!starts_with("please") &
+  select(-timestamp & !starts_with("please") &
          !starts_with("check_all") &
          !starts_with("betty") &
          !starts_with("that_dress_that") &
@@ -47,7 +49,12 @@ subset_clean_names <- clean_names %>%
          !starts_with("if_you_squint")) %>% 
   rename(age = how_old_are_you,
          going_out = are_you_going_actually_going_trick_or_treating_yourself,
-         hersheys_dark_chocolate = dark_chocolate_hershey) %>%
+         hersheys_dark_chocolate = dark_chocolate_hershey,
+         hersheys_milk_chocolate = hershey_s_milk_chocolate,
+         hersheys_kissables = hershey_s_kissables,
+         peanut_m_ms = peanut_m_m_s,
+         bonkers_the_candy = bonkers,
+         sea_salt_flavored_stuff = sea_salt_flavored_stuff_probably_chocolate_since_this_is_the_it_flavor_of_the_year) %>%
   mutate(age = as.integer(age))
 ```
 
@@ -64,18 +71,22 @@ subset_clean_names_2 <- clean_names2 %>%
          person_of_interest_season_3 =
            person_of_interest_season_3_dvd_box_set_not_including_disc_4_with_hilarious_outtakes,
          box_o_raisins = boxo_raisins,
-         peanut_m_ms = peanut_m_m_s
+         peanut_m_ms = peanut_m_m_s,
+         sweetums = sweetums_a_friend_to_diabetes,
+         hersheys_milk_chocolate = hershey_s_milk_chocolate
          ) %>% 
-  select(!starts_with("which") &
+  select(-timestamp &
+           !starts_with("which") &
            !starts_with("please") &
            !starts_with("betty") &
            !starts_with("that_dress") &
            !contains("favourite_font") &
            !starts_with("do_you") &
            !starts_with("guess") &
-           !starts_with("when_you"))
+           !starts_with("when_you") &
+           !contains("ignore")) %>%
+  mutate(age = as.integer(age))
 
-names(subset_clean_names_2)
 ```
 
 ```{r}
@@ -86,4 +97,37 @@ setdiff(names(subset_clean_names), names(subset_clean_names_2))
 setdiff(names(subset_clean_names_2), names(subset_clean_names))
 ```
 
+
+```{r}
+clean_names3 <- dataset_3 %>% 
+  janitor::clean_names()
+
+d3_subset_clean <- clean_names3 %>% 
+  select(starts_with("q"))
+
+names(d3_subset_clean) <- str_remove(names(d3_subset_clean), "q[0-9]+_")
+
+d3_subset_clean <- d3_subset_clean %>% 
+  select(-state_province_county_etc &
+         !starts_with("media") & 
+           -dress, -joy_other, -despair_other, -other_comments, -day) %>% 
+  rename(anonymous_brown_globs_that_come_in_black_and_orange_wrappers =
+         anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes,
+         peanut_m_ms = peanut_m_m_s,
+         box_o_raisins = boxo_raisins,
+         hersheys_milk_chocolate = hershey_s_milk_chocolate,
+         licorice = licorice_yes_black,
+         sweetums = sweetums_a_friend_to_diabetes,
+    x100_grand_bar = "100_grand_bar")
+         
+         
+```
+
+```{r}
+setdiff(names(d3_subset_clean),names(subset_clean_names_2))
+```
+
+```{r}
+setdiff(names(subset_clean_names_2), names(d3_subset_clean))
+```
 
