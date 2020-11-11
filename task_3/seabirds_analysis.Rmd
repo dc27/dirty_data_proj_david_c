@@ -1,0 +1,89 @@
+---
+title: "Seabirds Data Analysis"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+
+seabird_data <- read_csv("data/clean_data/birds_and_ship_data.csv")
+
+```
+### Which bird had the most individual sightings?
+
+```{r}
+seabird_data %>% 
+  select(-lat, -long) %>% 
+  filter(count == 1) %>% 
+  group_by(species, species_scientific, species_abbreviation) %>% 
+  summarise(individual_sightings = sum(count, na.rm = TRUE), .groups = 'drop_last') %>% 
+  arrange(desc(individual_sightings)) %>% 
+  head(1)
+```
+
+### Which bird had the highest total count?
+
+```{r}
+seabird_data %>% 
+  select(-lat, -long) %>%
+  group_by(species, species_scientific, species_abbreviation) %>% 
+  summarise(sightings = sum(count, na.rm = TRUE), .groups = 'drop_last') %>% 
+  arrange(desc(sightings)) %>% 
+  head(1)
+```
+
+### Which bird had the highest total count above a latitude of -30?
+```{r}
+seabird_data %>% 
+  select(-long) %>% 
+  filter(lat > -30) %>%
+  group_by(species, species_scientific, species_abbreviation) %>% 
+  summarise(sightings = sum(count, na.rm = TRUE), .groups = 'drop_last') %>% 
+  arrange(desc(sightings)) %>% 
+  head(1)
+  
+```
+
+
+### How many different types of birds were only ever seen in groups of 1?
+
+```{r}
+seabird_data %>% 
+  select(-lat, -long) %>%
+  group_by(species, species_scientific, species_abbreviation) %>% 
+  summarise(avg_sightings = mean(count, na.rm = TRUE), .groups = 'drop_last') %>% 
+  filter(avg_sightings == 1) %>% 
+  nrow()
+```
+It might be useful to see which birds they were:
+```{r}
+seabird_data %>% 
+  select(-lat, -long) %>%
+  group_by(species, species_scientific, species_abbreviation) %>% 
+  summarise(avg_sightings = mean(count, na.rm = TRUE), .groups = 'drop_last') %>% 
+  filter(avg_sightings == 1) %>% 
+  select(-avg_sightings)
+```
+
+### How many penguins were seen? (Hint: there are many types of penguin)
+
+```{r}
+penguin_pattern <- "penguin"
+
+penguin_sightings <- seabird_data %>% 
+  mutate(species = str_to_lower(species)) %>% 
+  filter(str_detect(species, penguin_pattern)) %>%
+  summarise(sightings = sum(count, na.rm = TRUE), .groups = 'drop_last') %>% 
+  arrange(desc(sightings))
+
+```
+
+```{r}
+penguin_sightings
+```
+
+```{r}
+```
+
