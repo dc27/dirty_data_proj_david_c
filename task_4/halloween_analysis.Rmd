@@ -1,6 +1,8 @@
 ---
 title: "Halloween Candy Analysis"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 
@@ -131,7 +133,12 @@ For the next three questions apply the following conversion:
 |Despair|-1|
 |Meh| 0|
 
-### What was the most popular candy bar  for each gender in the dataset?
+### What was the most popular candy bar for each gender in the dataset?
+
+To find the the most popular candy for each gender, first take a selection of
+only the desired columns - in this case: `candy`, `gender`, and `reaction`.
+Convert each reaction into the score, group the entries and then sum to get the
+total score for each candy for each gender.
 
 ```{r}
 favourites_by_gender <- candy_data %>% 
@@ -146,7 +153,10 @@ favourites_by_gender <- candy_data %>%
   slice_max(score, n = 2)
 ```
 
-```{r}
+The question asked for the most popular but I've included the second most
+popular as well for further comparison.
+
+```{r, echo=FALSE, eval=TRUE}
 favourites_by_gender
 ```
 
@@ -174,7 +184,6 @@ The top 2 are listed. "any full sized candy bar" is a common high scorer.
 ```{r, echo=FALSE, eval=TRUE}
 favourites_by_year
 ```
-
 
 ### What was the most popular candy bar for people in US, Canada, UK and all other countries?
 
@@ -204,5 +213,6 @@ The question asked for the top 1 candy, but the top two have been included since
 ```{r, eval=TRUE, echo=FALSE}
 favourites_by_country
 ```
+
 
 
