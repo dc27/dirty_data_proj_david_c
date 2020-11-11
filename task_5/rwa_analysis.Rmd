@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+library(ggplot2)
+
+rw_data <- read_csv("data/clean_data/clean_rwa.csv")
+```
+You’ll need to calculate people’s overall RWA score. This is found from the mean of questions 3 to 22. Questions 1 and 2 are warm up questions.
+
+Note that the following questions are reverse scored: 4, 6, 8, 9, 11, 13, 15, 18, 20, 21.
+Read the file rwa_codebook.txt to understand how to clean this data.
+
+[Hint: you may want to recode some of the variables to give their values meaning].
+2.1.
+
+### What’s the average RWA score for each gender?
+
+
+```{r}
+rw_data %>%
+  group_by(gender) %>%
+  summarise(average_rwai_per_gender = mean(avg_rwa, na.rm = TRUE))
+```
+
+### What’s the average RWA score for left handed people vs. right handed people.
+
+```{r}
+rw_data %>% 
+  group_by(handedness) %>% 
+  summarise(average_rwai_per_hand_group = mean(avg_rwa, na.rm = TRUE))
+```
+### What’s the average family size for each type of childhood?
+
+- I don't know exactly what this question is asking for
+
+potential answer 1:
+
+```{r}
+rw_data %>%
+  group_by(family_size) %>%
+  summarise(average_rwai_per_family_size = mean(avg_rwa, na.rm = TRUE))
+  
+```
+
+
+### What’s the average time to take the test for each education level?
+
+```{r}
+rw_data %>%
+  group_by(education_level) %>% 
+  summarise(mean(test_elapse_t, na.rm = TRUE))
+```
+
+```{r}
+rw_data %>%
+  group_by(education_level) %>% 
+  summarise(mean(survey_elapse_t, na.rm = TRUE))
+```
+
+```{r}
+avg_time_per_ed_level_tibble <- rw_data %>% 
+  group_by(education_level) %>% 
+  summarise(avg_time_per_ed_level = mean(test_elapse_t, na.rm = TRUE),.groups = 'drop_last') %>%
+  drop_na()
+```
+
+Create a plot of results of question 4.
+What’s the average RWA score for people aged
+```{r}
+positions <- c("less than high school", "high school", "university degree", "graduate degree")
+
+ggplot() +
+  geom_col(data = avg_time_per_ed_level_tibble, aes(x = education_levels, y = avg_time_per_ed_level), colour = "black", fill = "grey") +
+  scale_x_discrete(limits = positions) +
+  ylim(0,800) +
+  ggtitle("Level of education compared with the average time to complete the survey")
+```
+```{r}
+avg_per_age_band <- rw_data %>%
+  mutate(age_band = case_when(
+    age < 18 ~ "under 18",
+    age < 26 ~ "18-25",
+    age < 41 ~ "26-40",
+    age < 61 ~ "41-60",
+    age >= 61 ~ "61+"
+  )) %>%
+  select(participant_no, age_band, avg_rwa) %>% 
+  group_by(age_band) %>% 
+  summarise(avg_rwa_for_age_band = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last')
+```
+
+```{r}
+positions <- c("under 18", "18-25", "26-40", "41-60", "61+")
+
+ggplot() +
+  geom_point(data = avg_per_age_band, aes(x = age_band, y = avg_rwa_for_age_band)) +
+  scale_x_discrete(limits = positions) +
+  ylim(0,10) +
+  ggtitle("Right wing score vs age")
+```
+
