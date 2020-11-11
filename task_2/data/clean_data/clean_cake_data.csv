@@ -1,0 +1,157 @@
+cake,ingredient,measure,quantity,liquid_quantity,solid_quantity
+Angel,almond essence,teaspoon,0.25,0.25,NA
+Angel,cream of tartar,teaspoon,1.25,1.25,NA
+Angel,egg white,one,10,NA,NA
+Angel,sifted flour,cup,1,48,NA
+Angel,granulated sugar,cup,1.5,72,NA
+Angel,salt,teaspoon,0.25,0.25,NA
+Angel,vanilla extract,teaspoon,1,1,NA
+Babas au Rhum,butter,cup,0.25,12,NA
+Babas au Rhum,dried currants,tablespoon,3,48,NA
+Babas au Rhum,eggs,one,1,NA,NA
+Babas au Rhum,egg yolk,one,2,NA,NA
+Babas au Rhum,sifted flour,cup,1.75,84,NA
+Babas au Rhum,lemon rind,teaspoon,0.5,0.5,NA
+Babas au Rhum,milk,cup,0.25,12,NA
+Babas au Rhum,rum,ounce,2,NA,NA
+Babas au Rhum,granulated sugar,cup,0.25,12,NA
+Babas au Rhum,water,cup,0.25,12,NA
+Babas au Rhum,yeast,ounce,0.6,NA,NA
+Sweet Chocolate,butter,cup,1,48,NA
+Sweet Chocolate,chocolate,ounce,4,NA,NA
+Sweet Chocolate,eggs,one,4,NA,NA
+Sweet Chocolate,sifted flour,cup,2.5,120,NA
+Sweet Chocolate,milk,cup,1,48,NA
+Sweet Chocolate,soda,teaspoon,1,1,NA
+Sweet Chocolate,granulated sugar,cup,2,96,NA
+Sweet Chocolate,salt,teaspoon,0.5,0.5,NA
+Sweet Chocolate,vanilla extract,teaspoon,1,1,NA
+Sweet Chocolate,water,cup,0.5,24,NA
+Buche de Noel,eggs,one,4,NA,NA
+Buche de Noel,sifted flour,cup,1,48,NA
+Buche de Noel,granulated sugar,cup,1.3,62.400000000000006,NA
+Buche de Noel,salt,teaspoon,0.5,0.5,NA
+Buche de Noel,vanilla extract,teaspoon,1,1,NA
+Cheesecake,butter,cup,0.25,12,NA
+Cheesecake,cottage cheese,pound,1.5,NA,24
+Cheesecake,eggs,one,6,NA,NA
+Cheesecake,sifted flour,cup,0.25,12,NA
+Cheesecake,lemon juice,tablespoon,1,16,NA
+Cheesecake,lemon rind,teaspoon,1,1,NA
+Cheesecake,sour cream cup,NA,1,NA,NA
+Cheesecake,granulated sugar,cup,1,48,NA
+Cheesecake,salt,teaspoon,0.25,0.25,NA
+Cheesecake,zwiebach,ounce,6,NA,NA
+Rum Cheesecake,cottage cheese,pound,1.5,NA,24
+Rum Cheesecake,eggs,one,2,NA,NA
+Rum Cheesecake,gelatin,tablespoon,2,32,NA
+Rum Cheesecake,heavy cream,cup,1,48,NA
+Rum Cheesecake,lemon juice,tablespoon,1,16,NA
+Rum Cheesecake,lemon rind,teaspoon,1,1,NA
+Rum Cheesecake,milk,cup,1,48,NA
+Rum Cheesecake,rum,ounce,1,NA,NA
+Rum Cheesecake,granulated sugar,cup,1,48,NA
+Rum Cheesecake,salt,teaspoon,0.25,0.25,NA
+Blender Cheesecake,cottage cheese,pound,0.5,NA,8
+Blender Cheesecake,crushed ice,cup,1,48,NA
+Blender Cheesecake,crumbs,cup,0.3,14.399999999999999,NA
+Blender Cheesecake,egg yolk,one,2,NA,NA
+Blender Cheesecake,gelatin,tablespoon,1,16,NA
+Blender Cheesecake,lemon juice,tablespoon,1,16,NA
+Blender Cheesecake,lemon rind,teaspoon,1,1,NA
+Blender Cheesecake,sour cream cup,NA,1,NA,NA
+Blender Cheesecake,water,cup,0.5,24,NA
+One Bowl Chocolate,baking powder,teaspoon,2,2,NA
+One Bowl Chocolate,cocoa,tablespoon,10,160,NA
+One Bowl Chocolate,eggs,one,2,NA,NA
+One Bowl Chocolate,sifted flour,cup,2,96,NA
+One Bowl Chocolate,milk,cup,0.7,33.599999999999994,NA
+One Bowl Chocolate,soda,teaspoon,0.5,0.5,NA
+One Bowl Chocolate,shortening,tablespoon,10,160,NA
+One Bowl Chocolate,granulated sugar,cup,1.5,72,NA
+One Bowl Chocolate,salt,teaspoon,0.25,0.25,NA
+One Bowl Chocolate,vanilla extract,teaspoon,1,1,NA
+One Bowl Chocolate,water,cup,0.5,24,NA
+Red Devil's Food,cocoa,tablespoon,0.3,4.8,NA
+Red Devil's Food,eggs,one,2,NA,NA
+Red Devil's Food,sifted flour,cup,1.75,84,NA
+Red Devil's Food,milk,cup,1,48,NA
+Red Devil's Food,soda,teaspoon,1.25,1.25,NA
+Red Devil's Food,shortening,tablespoon,0.5,8,NA
+Red Devil's Food,granulated sugar,cup,1.5,72,NA
+Red Devil's Food,salt,teaspoon,1,1,NA
+Red Devil's Food,vanilla extract,teaspoon,1,1,NA
+Sour Cream Fudge,chocolate,ounce,3,NA,NA
+Sour Cream Fudge,eggs,one,2,NA,NA
+Sour Cream Fudge,sifted flour,cup,2,96,NA
+Sour Cream Fudge,soda,teaspoon,1,1,NA
+Sour Cream Fudge,sour cream cup,NA,1,NA,NA
+Sour Cream Fudge,shortening,tablespoon,0.3,4.8,NA
+Sour Cream Fudge,granulated sugar,cup,1.5,72,NA
+Sour Cream Fudge,salt,teaspoon,1,1,NA
+Sour Cream Fudge,vanilla extract,teaspoon,1,1,NA
+Sour Cream Fudge,water,cup,0.25,12,NA
+Hungarian Cream,almond essence,teaspoon,1.5,1.5,NA
+Hungarian Cream,baking powder,teaspoon,3,3,NA
+Hungarian Cream,eggs,one,3,NA,NA
+Hungarian Cream,sifted flour,cup,3,144,NA
+Hungarian Cream,heavy cream,cup,2,96,NA
+Hungarian Cream,granulated sugar,cup,1.5,72,NA
+Hungarian Cream,salt,teaspoon,1,1,NA
+Hungarian Cream,vanilla extract,teaspoon,2,2,NA
+Crumb and Nut,baking powder,teaspoon,3,3,NA
+Crumb and Nut,crumbs,cup,3,144,NA
+Crumb and Nut,eggs,one,4,NA,NA
+Crumb and Nut,milk,cup,1,48,NA
+Crumb and Nut,nuts,cup,1,48,NA
+Crumb and Nut,shortening,tablespoon,1,16,NA
+Crumb and Nut,granulated sugar,cup,1,48,NA
+Crumb and Nut,vanilla extract,teaspoon,2,2,NA
+Spiced Pound,butter,cup,1,48,NA
+Spiced Pound,eggs,one,5,NA,NA
+Spiced Pound,sifted flour,cup,2,96,NA
+Spiced Pound,nutmeg,teaspoon,1.5,1.5,NA
+Spiced Pound,granulated sugar,cup,1.7,81.6,NA
+Spiced Pound,salt,teaspoon,0.5,0.5,NA
+Strawberry Roll,baking powder,teaspoon,0.75,0.75,NA
+Strawberry Roll,cottage cheese,pound,0.5,NA,8
+Strawberry Roll,eggs,one,4,NA,NA
+Strawberry Roll,sifted flour,cup,0.75,36,NA
+Strawberry Roll,granulated sugar,cup,0.75,36,NA
+Strawberry Roll,strawberries,quart,1,NA,32
+Strawberry Roll,salt,teaspoon,1,1,NA
+Strawberry Roll,vanilla extract,teaspoon,1,1,NA
+Savarin,butter,cup,0.7,33.599999999999994,NA
+Savarin,eggs,one,3,NA,NA
+Savarin,sifted flour,cup,1.5,72,NA
+Savarin,lemon rind,teaspoon,1,1,NA
+Savarin,milk,cup,0.25,12,NA
+Savarin,granulated sugar,cup,0.6,28.799999999999997,NA
+Savarin,salt,teaspoon,0.5,0.5,NA
+Savarin,water,cup,0.25,12,NA
+Savarin,yeast,ounce,1,NA,NA
+Banana Shortcake,baking powder,teaspoon,4,4,NA
+Banana Shortcake,butter,cup,0.6,28.799999999999997,NA
+Banana Shortcake,bananas,one,3,NA,NA
+Banana Shortcake,sifted flour,cup,3,144,NA
+Banana Shortcake,heavy cream,cup,1,48,NA
+Banana Shortcake,milk,cup,1,48,NA
+Banana Shortcake,granulated sugar,cup,0.13,6.24,NA
+Banana Shortcake,salt,teaspoon,0.5,0.5,NA
+Strawberry Shortcake,baking powder,teaspoon,3,3,NA
+Strawberry Shortcake,butter,cup,0.12,5.76,NA
+Strawberry Shortcake,cottage cheese,pound,0.2,NA,3.2
+Strawberry Shortcake,eggs,one,1,NA,NA
+Strawberry Shortcake,sifted flour,cup,2,96,NA
+Strawberry Shortcake,milk,cup,0.5,24,NA
+Strawberry Shortcake,sour cream cup,NA,1,NA,NA
+Strawberry Shortcake,granulated sugar,cup,0.6,28.799999999999997,NA
+Strawberry Shortcake,strawberries,quart,1,NA,32
+Strawberry Shortcake,salt,teaspoon,0.75,0.75,NA
+Sponge,almond essence,teaspoon,0.5,0.5,NA
+Sponge,baking powder,teaspoon,1,1,NA
+Sponge,eggs,one,4,NA,NA
+Sponge,sifted flour,cup,0.75,36,NA
+Sponge,granulated sugar,cup,0.75,36,NA
+Sponge,salt,teaspoon,0.25,0.25,NA
+Sponge,water,cup,2,96,NA

@@ -1,0 +1,75 @@
+---
+title: "Cake Data Analysis"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+
+cake_data <- read_csv("data/clean_data/clean_cake_data.csv")
+
+```
+### Which cake has the most cocoa in it?
+
+```{r}
+cake_data %>% 
+  filter(ingredient == "cocoa") %>% 
+  slice_max(liquid_quantity)
+```
+###  For sponge cake, how many cups of ingredients are used in total?
+
+```{r}
+cups_from_cups <- cake_data %>% 
+  filter(cake == "Sponge" & measure == "cup") %>% 
+  summarise(sum(quantity)) %>% 
+  pull()
+```
+Alternatively the number of teaspoons can be calculated, and then divided by 48
+for the total cups from all ingredients.
+```{r}
+cups_from_all <- cake_data %>% 
+  filter(cake == "Sponge") %>% 
+  summarise(sum(liquid_quantity, na.rm = TRUE)) %>% 
+  pull()
+
+cups_from_all / 48
+```
+
+### How many ingredients are measured in teaspoons?
+
+```{r}
+cake_data %>% 
+  filter(measure == "teaspoon") %>% 
+  distinct(ingredient) %>% 
+  nrow()
+```
+It might be useful to see the names of the ingredients:
+```{r, echo = FALSE, eval = TRUE}
+cake_data %>% 
+  filter(measure == "teaspoon") %>% 
+  distinct(ingredient) %>% 
+  pull()
+```
+
+### Which cake has the most unique ingredients?
+
+```{r}
+cake_data %>% 
+  group_by(cake) %>% 
+  summarise(n_unique_ingredients = sum(n_distinct(ingredient)), .groups = 'drop') %>% 
+  slice_max(n_unique_ingredients)
+```
+
+### Which ingredients are used only once?
+
+```{r}
+cake_data %>% 
+  add_count(ingredient) %>% 
+  filter(n == 1) %>% 
+  select(ingredient) %>% 
+  pull()
+```
+
+
