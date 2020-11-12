@@ -1,64 +1,100 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Task 1"
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
 ---
 
 
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 
-decathalon_data <- read_csv("data/clean_data")
+decathalon_data <- read_csv("data/clean_data/decathalon_results_data.csv")
 ```
+
+# Decathalon Data Analysis
+
+The data has been cleaned and tidied.
+
+### The longest long jump
+
+`long_jump` is the variable relating to long jumps. Selecting only that variable
+and finding the max value:
 
 ```{r}
 decathalon_data %>% 
-  select(name, long_jump) %>% 
-  slice_max(long_jump, n = 1)
+  select(name, event, distance_or_time) %>% 
+  filter(event == "long_jump") %>% 
+  slice_max(distance_or_time, n = 1)
 ```
 
-What was the average 100m time in each competition?
+### Average 100m time in each competition
+
+There are two competitions in the data. `x100m` is the variable relating to 
 
 ```{r}
-decathalon_data %>% 
-  select(x100m) %>%
-  summarise(average_100m = mean(x100m, na.rm = TRUE)) %>% 
-  pull()
+decathalon_data %>%
+  filter(event == "x100m") %>% 
+  group_by(competition) %>% 
+  summarise(average_100m = mean(distance_or_time, na.rm = TRUE),
+            .groups = 'drop_last')
 ```
 
-Who had the highest total points across both competitions?
+### Top total points across both competitions
+
+Who had the highest combined total points from both competitions?
+
+Looking at a subset of the data and then collapsing for unique rows, the
+result is one row per athlete per competition. 
 
 ```{r}
-decathalon_data %>% 
-  select(name, points, competition) %>% 
+decathalon_data %>%
+  select(name, points, competition) %>%
+  unique() %>% 
   group_by(name) %>% 
   summarise(total_points = sum(points), .groups = 'drop') %>% 
   slice_max(total_points) %>% 
   pull(name, total_points)
 ```
-What was the shot-put scores for the top three competitors in each competition?
+
+### Top three shot-putters in each competition
+
+Filtering for just the shot-put event and then grouping the athletes into the
+two competitions, a slice of the top three in each competition can be taken.
+The distance is included.
 
 ```{r}
-decathalon_data %>% 
-  select(name, shot_put, competition) %>% 
+decathalon_data %>%
+  filter(event == "shot_put") %>% 
   group_by(competition) %>% 
-  slice_max(shot_put, n = 3)
+  slice_max(distance_or_time, n = 3)
 ```
-What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
+### 400m time impact on points
+
+How does the average points change based on how the athlete performed in th
+400m event. Faster runners are classed as athletes with a time of under 50s, and
+slower runners are athletes with a time of over 50s.
 
 ```{r}
 faster_runners <- decathalon_data %>%
-  filter(x400m < 50)
+  filter(event == "x400m" & distance_or_time < 50)
 
+slower_runners <- decathalon_data %>%
+  filter(event == "x400m" & distance_or_time > 50)
+
+```
+
+The average points for the faster runners:
+```{r, echo=TRUE, eval=TRUE}
 faster_runners %>% 
   summarise(average_points = mean(points, na.rm = TRUE)) %>% 
   pull()
 ```
 
-```{r}
-
-slower_runners <- decathalon_data %>%
-  filter(x400m > 50)
-
+The average points for the slower runners:
+```{r, echo=FALSE, eval=TRUE}
 slower_runners %>% 
   summarise(average_points = mean(points, na.rm = TRUE)) %>% 
   pull()

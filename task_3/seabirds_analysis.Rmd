@@ -3,6 +3,7 @@ title: "Seabirds Data Analysis"
 output:
   html_document:
     df_print: paged
+    toc: TRUE
 ---
 
 ```{r, message = FALSE}

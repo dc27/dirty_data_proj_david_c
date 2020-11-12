@@ -3,6 +3,8 @@ title: "Cake Data Analysis"
 output:
   html_document:
     df_print: paged
+    toc: true
+    toc_float: true
 ---
 
 ```{r, message=FALSE}
@@ -11,14 +13,31 @@ library(tidyverse)
 cake_data <- read_csv("data/clean_data/clean_cake_data.csv")
 
 ```
-### Which cake has the most cocoa in it?
+
+# Cake Data Analysis
+
+The cake data has been cleaned, tidied and combined with the ingredients
+information.
+
+### The most cocoa
+
+Which cake has the most cocoa?
+
+cocoa is a possible `ingredient`. Performing a filter for only cakes including
+cocoa and then taking a slice of the maximum `liquid_quantity` reveals the cake
+with the most cocoa.
 
 ```{r}
 cake_data %>% 
   filter(ingredient == "cocoa") %>% 
   slice_max(liquid_quantity)
 ```
-###  For sponge cake, how many cups of ingredients are used in total?
+###  Cups in a Sponge
+
+How many cups of ingredients go into a sponge cake?
+
+"Sponge cake" exists in the `cake` variable as "Sponge". Sponge cake ingredients
+that come in cup measurements can be filtered and then totalled:
 
 ```{r}
 cups_from_cups <- cake_data %>% 
@@ -26,8 +45,9 @@ cups_from_cups <- cake_data %>%
   summarise(sum(quantity)) %>% 
   pull()
 ```
-Alternatively the number of teaspoons can be calculated, and then divided by 48
-for the total cups from all ingredients.
+
+Alternatively the total number of teaspoons can be calculated, and then divided
+by 48 for the total cups from all liquid ingredients in a sponge cake.
 ```{r}
 cups_from_all <- cake_data %>% 
   filter(cake == "Sponge") %>% 
@@ -37,7 +57,12 @@ cups_from_all <- cake_data %>%
 cups_from_all / 48
 ```
 
-### How many ingredients are measured in teaspoons?
+### Teaspoon ingredients
+
+How many ingredients can be measured in teaspoons?
+
+This can be found by first filtering for "teaspoon" in the `measure` column. And
+then counting the distinct rows.
 
 ```{r}
 cake_data %>% 
@@ -45,6 +70,7 @@ cake_data %>%
   distinct(ingredient) %>% 
   nrow()
 ```
+
 It might be useful to see the names of the ingredients:
 ```{r, echo = FALSE, eval = TRUE}
 cake_data %>% 
@@ -53,7 +79,12 @@ cake_data %>%
   pull()
 ```
 
-### Which cake has the most unique ingredients?
+### The most unique cake
+
+Which cake has the most unique ingredients?
+
+This can be found by first grouping by `cake` and then using `n_distinct()` to
+count only distinct ingredients in each cake.
 
 ```{r}
 cake_data %>% 
@@ -62,7 +93,12 @@ cake_data %>%
   slice_max(n_unique_ingredients)
 ```
 
-### Which ingredients are used only once?
+### Uncommon ingredients
+
+Which ingredients are used only once?
+
+This can be found by adding a column to count the occurence of each ingredient,
+filtering for where the new column `n` is 1 and then pulling the ingredients.
 
 ```{r}
 cake_data %>% 
