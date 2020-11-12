@@ -12,12 +12,78 @@ library(tidyverse)
 library(maps)
 
 seabird_data <- read_csv("data/clean_data/birds_and_ship_data.csv")
-
 ```
+
+## Cleaning process
+
+The data for this analysis comes from two sheets in an excel file relating to
+seabird sightings and the ships they were sighted from.
+
+### Cleaning the seabirds data:
+
+Only a subset of the data was required for analysis: `record`, `record_id`,
+`species`, `species_scientific` - which refers to the scientific name for each
+spieces -, `species_abbreviation`, and `count`. Only these variables were
+retained from the raw seabirds data.
+
+The column (variable) names listed above were brought into accordance with the
+style guide - snake_case, and extraneous data relating to
+
+- plumage
+- age
+- plumage patterns
+
+was removed from the `species`, `species_scientific`, and `species_abbreviation`
+variables with an `str_detect` function, which filtered out the patterns that
+were not relevant for the analysis i.e. the distinction between the ages of the
+same species of bird is not something that this analysis is concerned with.
+
+This was saved to a new clean seabirds data file to be used later.
+
+### Cleaning the ships data:
+
+Again, only a subset of the initial data was required for this analysis. From
+the ships data, only: `record`, `record_id`, and the latitude/longitude columns
+were needed.
+
+The names of these columns were brought into accordance with the style guide.
+
+No further cleaning of the ships data was done.
+
+The cleaned ships data was saved to a new file to be used later.
+
+### Combining the birds and ships data:
+
+The clean data for the seabirds sightings was combined with the clean data,
+using a join, for the ships they were sighted from resulting in a dataset with
+both latitude, longitude, species information, and count which was ready for
+analysis. 
+
+### Assumptions:
+
+where count was recorded as 0. This has been changed to NA for analysis.
+
+Reasoning: 0 cannot be counted as 1 or greater than 1.
+
+the same classification of species is used throughout. i.e. where AD is
+suffixed to indicate the age of a bird. In all cases, any suffix to the species
+data which could be considered as a suffix has been removed. (e.g. AD = adult,
+PL1 = plumage pattern 1, DRK = dark plumage colour)
+
+Reasoning: the distinction of bird age, plumage type, or colour is not required
+for the analysis. Including unnecessary data would directly influence the
+results.
+
+
+
+It is assumed that `record`, `record_id`, 
+The steps you took to clean the data (you don’t need to write out in detail every step, but a combination of commented code chunks with surrounding overall explanations would be great).
+The answers to the questions presented in the task brief
+Any other interesting analyses or conclusions you come across.
 
 # Seabird Sightings Data Analysis
 
-The data have been cleaned, tidied and joined into one clean dataset. This has
+The data have been cleaned, tidied and joined into one clean dataset. This hass
 been loaded in along with the tidyverse.
 
 ### Most individual sightings
@@ -144,4 +210,12 @@ ggplot() +
   xlim(75, 175) +
   ylim(-70, 0)
 ```
+
+
+### Assertations:
+
++ the columns must be the correct type before analysis,
++ there must be the correct number of columns in each dataset before analysis,
++ lat/longs must be within a certain range - (-90 - 90/ -180 - 180),
++ count must be within a certain range ( >0 ).
 

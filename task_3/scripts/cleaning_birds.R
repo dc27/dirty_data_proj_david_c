@@ -8,10 +8,9 @@ library(assertr)
 bird_data <- readxl::read_excel("data/raw_data/seabirds.xls", 2)
 
 # create cleaning function
-
-  
+make_bird_data_clean <- function (dirty_bird_data) {
   # 1. take a subset of the data with only the desired columns
-  bird_data_subset <- bird_data %>%
+  bird_data_subset <- dirty_bird_data %>%
     select(RECORD,
          `RECORD ID`,
          `Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`,
@@ -24,7 +23,8 @@ bird_data <- readxl::read_excel("data/raw_data/seabirds.xls", 2)
     rename(bird_record = RECORD,
          record_id = `RECORD ID`,
          species = `Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`,
-         species_scientific = `Species  scientific name (taxon [AGE /SEX /  PLUMAGE PHASE])`,
+         species_scientific =
+           `Species  scientific name (taxon [AGE /SEX /  PLUMAGE PHASE])`,
          species_abbreviation = `Species abbreviation`,
          count = COUNT)
   
@@ -52,3 +52,7 @@ bird_data <- readxl::read_excel("data/raw_data/seabirds.xls", 2)
     verify(mode(count) == "numeric") %>%
     verify(is.na(count) | count > 0) %>%
     write_csv("data/clean_data/seabirds.csv")
+  
+}
+
+make_bird_data_clean(bird_data)
