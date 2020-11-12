@@ -27,7 +27,8 @@ make_survey_data_clean <- function(dirty_data) {
   # calculated they have to be changed to the right form. This is done by a
   # CASE_WHEN expression
   correct_responses_subset_long <- subset_long %>% 
-    mutate(survey_question = as.numeric(str_remove(survey_question, "Q"))) %>% 
+    mutate(survey_question = as.numeric(str_remove(survey_question, "Q"))) %>%
+    mutate(response = na_if(response, 0)) %>% 
     mutate(response = case_when(
       survey_question == 4|6|8|9|11|13|15|18|20|21 ~ 10 - response,
       TRUE ~ response
