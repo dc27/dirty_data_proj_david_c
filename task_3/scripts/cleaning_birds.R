@@ -8,7 +8,7 @@ library(assertr)
 bird_data <- readxl::read_excel("data/raw_data/seabirds.xls", 2)
 
 # create cleaning function
-make_bird_data_clean <- function (dirty_data) {
+
   
   # 1. take a subset of the data with only the desired columns
   bird_data_subset <- bird_data %>%
@@ -52,6 +52,3 @@ make_bird_data_clean <- function (dirty_data) {
     verify(mode(count) == "numeric") %>%
     verify(is.na(count) | count > 0) %>%
     write_csv("data/clean_data/seabirds.csv")
-}
-
-make_bird_data_clean(bird_data)

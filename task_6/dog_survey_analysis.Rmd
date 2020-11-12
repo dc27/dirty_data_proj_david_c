@@ -1,0 +1,83 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+
+dog_survey_data <- read_csv("data/clean_data/dog_survey_data.csv")
+```
+
+# Dog Survey Data Analysis
+
+
+### Valid email addresses
+
+The client only counts a valid email address as one ending in ‘.com’. How many
+survey results have a valid email address?
+
+Creating a column where the value will be TRUE for valid email addresses, and
+FALSE for invalid email addresses. valid emails are where they end with ".com"
+which is the pattern used in detection. The number of rows can then be counted
+and displayed
+
+```{r}
+dog_survey_data %>% 
+  mutate(valid_email = str_detect(email,".com$")) %>% 
+  filter(valid_email == TRUE) %>% 
+  nrow()
+```
+
+### Average food cost per dog size
+
+What’s the average amount spent on dog food for each dog size?
+
+This can be found by grouping by each dog size and then calculating the average.
+
+```{r}
+dog_survey_data %>% 
+  group_by(dog_size) %>% 
+  summarise(avg_food_cost = mean(amount_spent_on_dog_food, na.rm = TRUE),
+            .groups = 'drop_last')
+```
+
+### M+ owner's dog ages
+
+For owners whose surname starts with a letter in the second half of the alphabet
+(N onwards) what is the average age of their dog?
+
+This can be found by performing a filter and then calculating the average age.
+
+```{r}
+dog_survey_data %>% 
+  filter(last_name >= "n") %>% 
+  summarise(avg_age = mean(dog_age, na.rm = TRUE))
+
+```
+
+### Average age for dogs by gender.
+
+The dog_age column is the age in dog years. The conversion ration is 1 human
+year = 6 dog years. Accounting for this, grouping by gender and the average age
+for each gender can be calculated.
+
+```{r}
+dog_data_accounting_for_age <- dog_survey_data %>% 
+  mutate(dog_age = (dog_age/6)) %>%
+  group_by(dog_gender) %>% 
+  summarise(avg_age = mean(dog_age, na.rm = TRUE), .groups = 'drop_last') %>% 
+  drop_na()
+
+dog_data_accounting_for_age
+```
+
+### Plot
+
+```{r, eval = TRUE, echo = FALSE}
+ggplot()+
+  geom_col(data = dog_data_accounting_for_age, aes(x = dog_gender, y = avg_age),
+           colour = "black", fill = "grey")
+
+```
+
