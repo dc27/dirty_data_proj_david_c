@@ -16,41 +16,66 @@ rw_data <- read_csv("data/clean_data/clean_rwa.csv")
 
 # Right-Wing Authoritarianism Survey Response Analysis
 
-### What’s the average RWA score for each gender?
+The RWA survey data has been clean and average right-wing-authoritarian response
+score has been calculated. The score indicates on a scale of 1 - 10 how RWA the
+participant's responses were, with 1 being not RWA and 10 being heavily RWA. 
+
+### Average RWA score per gender
+
+Gender is one of the collected variables, so they can be grouped together based
+on their response and then the average for each gender can be calculated
 
 ```{r}
 rw_data %>%
   group_by(gender) %>%
-  summarise(average_rwai_per_gender = mean(avg_rwa, na.rm = TRUE))
+  summarise(average_rwai_per_gender = mean(avg_rwa, na.rm = TRUE),
+            .groups = 'drop_last')
 ```
 
-### What’s the average RWA score for left handed people vs. right handed people.
+### Average RWAI for left handed vs. right handed people
+
+Whether a participant was right, left, or both handed was recorded. Participants
+can be grouped by their "handedness" and then the average average RWA can be
+calculated for each handed group.
 
 ```{r}
 rw_data %>% 
   group_by(handedness) %>% 
-  summarise(average_rwai_per_hand_group = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last')
+  summarise(average_rwai_per_hand_group = mean(avg_rwa, na.rm = TRUE),
+            .groups = 'drop_last') %>% 
+  drop_na()
 ```
-### What’s the average family size for each type of childhood?
+### Average RWAI per size of family.
 
-- I don't know exactly what this question is asking for
-
-potential answer 1:
+I don't know exactly what this question is asking for. I took it to mean:
+what is the average RW score per family size, since literaly translated the
+question doesn't make sense - i.e. the average family size for each type of
+childhood will be the same as the family size, no?
 
 ```{r}
 rw_data %>%
   group_by(family_size) %>%
-  summarise(average_rwai_per_family_size = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last')
-  
+  summarise(average_rwai_per_family_size = mean(avg_rwa, na.rm = TRUE),
+            .groups = 'drop_last')
 ```
 
 
-### What’s the average time to take the test for each education level?
+### Average test time per education level
+
+Does a persons level of education have an impact on how long it took them to
+complete the test?
+
+Education is a measured variable in the data, so it can be easily grouped by and
+then the average test time for each can be calculated. Here the median average
+was preferred over the mean average. This is because a tiny minority of the
+participants took an enormous time to complete the test (maybe they left it and
+came back to it).
 
 ```{r}
 rw_data %>%
   group_by(education_level) %>% 
-  summarise(median(test_elapse_t, na.rm = TRUE), .groups = 'drop_last')
+  summarise(avg_time = median(test_elapse_t, na.rm = TRUE),
+            .groups = 'drop_last')
 ```
 
 ```{r}
@@ -62,26 +87,38 @@ rw_data %>%
 ```{r}
 avg_time_per_ed_level_tibble <- rw_data %>% 
   group_by(education_level) %>% 
-  summarise(avg_time_per_ed_level = median(test_elapse_t, na.rm = TRUE), .groups = 'drop_last') %>%
+  summarise(avg_test_time = median(test_elapse_t, na.rm = TRUE),
+            .groups = 'drop_last') %>%
   drop_na()
 ```
 
-Create a plot of results of question 4.
+### Plot results
 
-```{r}
+```{r, echo=FALSE, eval=TRUE}
 positions <- c("less than high school", "high school", "university degree", "graduate degree")
 
 ggplot() +
-  geom_col(data = avg_time_per_ed_level_tibble, aes(x = education_level, y = avg_time_per_ed_level), colour = "black", fill = "grey") +
+  geom_col(data = avg_time_per_ed_level_tibble, aes(x = education_level, y = avg_test_time), colour = "black", fill = "grey") +
   scale_x_discrete(limits = positions) +
   ylim(0,400) +
-  ggtitle("Level of education compared with the average time to complete the survey")
+  ggtitle("Level of education compared with the average time to complete the test")
 ```
 
-### Average RWA score for people aged
 
-What’s the average RWA score for people aged
 
+### Average RWAI per age group
+
+What’s the average RWA score for people in different age bands?
+
+This can be answered first by splitting people into the desired age-bands:
+
+- under 18s,
+- 18-25 yr olds,
+- 26-40 yr olds,
+- 41-60 yr olds
+- 61+
+
+and then by grouping based on which age band participants fall in and calculating the average for that age band. 
 ```{r}
 avg_per_age_band <- rw_data %>%
   mutate(age_band = case_when(
@@ -96,11 +133,16 @@ avg_per_age_band <- rw_data %>%
   summarise(avg_rwa_for_age_band = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last')
 ```
 
-```{r}
+The average right wing authoritarian index score can be plotted for each age
+band. Again the score relates to a scale of 1-10, with 1 being not RWA and 10
+being RWA.
+```{r, echo=FALSE, eval =TRUE}
 positions <- c("under 18", "18-25", "26-40", "41-60", "61+")
 
 ggplot() +
-  geom_point(data = avg_per_age_band, aes(x = age_band, y = avg_rwa_for_age_band)) +
+  geom_col(data = avg_per_age_band,
+           aes(x = age_band, y = avg_rwa_for_age_band),
+           colour = "black", fill = "grey") +
   scale_x_discrete(limits = positions) +
   ylim(0,10) +
   ggtitle("Right wing score vs age")
@@ -109,66 +151,84 @@ ggplot() +
 ```{r}
 avg_rwa_per_country <- rw_data %>% 
   group_by(country_ip) %>% 
-  summarise(average_rwa = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last')
+  summarise(average_rwa = mean(avg_rwa, na.rm = TRUE),
+            .groups = 'drop_last')
 ```
 
-```{r}
-avg_rwa_per_country_group1 <- rw_data %>% 
-  group_by(country_ip) %>% 
-  summarise(average_rwa = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last') %>% 
+```{r, eval=TRUE, echo=FALSE}
+avg_rwa_per_country_group1 <- avg_rwa_per_country %>%
   filter(country_ip < "FA")
 
-avg_rwa_per_country_group2 <- rw_data %>% 
-  group_by(country_ip) %>% 
-  summarise(average_rwa = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last') %>% 
+avg_rwa_per_country_group2 <- avg_rwa_per_country %>% 
   filter(country_ip >= "FA" & country_ip < "LA")
 
-avg_rwa_per_country_group3 <- rw_data %>% 
-  group_by(country_ip) %>% 
-  summarise(average_rwa = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last') %>% 
+avg_rwa_per_country_group3 <- avg_rwa_per_country %>% 
   filter(country_ip >= "LA" & country_ip < "SA")
 
-avg_rwa_per_country_group4 <- rw_data %>% 
-  group_by(country_ip) %>% 
-  summarise(average_rwa = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last') %>% 
+avg_rwa_per_country_group4 <- avg_rwa_per_country %>% 
   filter(country_ip >= "SA")
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 
 ggplot() +
-  geom_col(data = avg_rwa_per_country_group4, aes(x = country_ip, y = average_rwa), colour = "black", fill = "grey") +
+  geom_col(data = avg_rwa_per_country_group4,
+           aes(x = country_ip, y = average_rwa),
+           colour = "black", fill = "grey") +
   ylim(0,10) +
   ggtitle("Right wing score vs country") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   coord_flip()
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE, warning=FALSE}
 
 ggplot() +
-  geom_col(data = avg_rwa_per_country_group3, aes(x = country_ip, y = average_rwa), colour = "black", fill = "grey") +
+  geom_col(data = avg_rwa_per_country_group3,
+           aes(x = country_ip, y = average_rwa),
+           colour = "black", fill = "grey") +
   ylim(0,10) +
   ggtitle("Right wing score vs country") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   coord_flip()
 ```
 
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 
 ggplot() +
-  geom_col(data = avg_rwa_per_country_group2, aes(x = country_ip, y = average_rwa), colour = "black", fill = "grey") +
+  geom_col(data = avg_rwa_per_country_group2,
+           aes(x = country_ip, y = average_rwa),
+           colour = "black", fill = "grey") +
   ylim(0,10) +
   ggtitle("Right wing score vs country") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   coord_flip()
 ```
-```{r}
+```{r, eval=TRUE, echo=FALSE}
 ggplot() +
-  geom_col(data = avg_rwa_per_country_group1, aes(x = country_ip, y = average_rwa), colour = "black", fill = "grey") +
+  geom_col(data = avg_rwa_per_country_group1,
+           aes(x = country_ip, y = average_rwa),
+           colour = "black", fill = "grey") +
   ylim(0,10) +
   ggtitle("Right wing score vs country") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
   coord_flip()
+```
+
+### Average RWA per urban classification
+
+Does the urban classification have an impace on the participants RWAI?
+Urban classifications:
+
+- rural,
+- urban,
+- suburban,
+
+were recorded. The participants can be grouped based on their response and then
+the average for each classification can be calculated.
+```{r}
+rw_data %>% 
+  group_by(urban_classification) %>% 
+  summarise(mean(avg_rwa, na.rm = TRUE), .groups = "drop_last")
 ```
 

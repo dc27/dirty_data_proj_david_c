@@ -1,5 +1,6 @@
 # load in the tidyverse
 library(tidyverse)
+library(assertr)
 
 # read in the dirty data
 right_wing_data <- read_csv("data/raw_data/rwa.csv")
@@ -157,12 +158,29 @@ make_survey_data_clean <- function(dirty_data) {
            test_elapse_t = testelapse,
            survey_elapse_t = surveyelapse,
            family_size = familysize,
-           survey_accurate = surveyaccurate) %>% 
-    mutate(major = str_to_lower(major),
-           survey_accurate = as.logical(survey_accurate)) %>% 
-    filter(survey_accurate == TRUE)
+           survey_accurate = surveyaccurate)
+    
+  # some of the family sizes are non-sensical (e.g. 0, 69) and some of the
+  # surveys have inaccurate responses. Chosen to remove them here
+  clean_rwa_filtered <- clean_output_and_average %>% 
+  mutate(major = str_to_lower(major),
+          survey_accurate = as.logical(survey_accurate),
+          family_size = ifelse(
+            family_size <= 0 |family_size > 12, NA, family_size),
+         age = ifelse(
+           age <= 0 | age > 111, NA, age)) %>% 
+  filter(survey_accurate == TRUE)
   
-  clean_output_and_average %>% 
+  # assert that
+  # survey record must be accurate
+  # family size is within bounds or NA
+  # age is within bounds or NA
+  # avg_rwa is between 1 and 10 or NA
+  clean_rwa_filtered %>% 
+    verify(survey_accurate == TRUE) %>%
+    verify(is.na(family_size) |(family_size > 0 & family_size < 13)) %>% 
+    verify(is.na(age) | (age > 0 & age < 111)) %>%
+    verify(is.na(avg_rwa) | (avg_rwa >= 0 & avg_rwa <=10)) %>% 
     write_csv("data/clean_data/clean_rwa.csv")
 }
 
