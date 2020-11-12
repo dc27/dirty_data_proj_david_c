@@ -1,7 +1,10 @@
 # load in the tidyverse
 library(tidyverse)
+library(assertr)
 
 # read in the raw bird data 
+# 
+# it's located in the second sheet of the seabirds xls file
 bird_data <- readxl::read_excel("data/raw_data/seabirds.xls", 2)
 
 # create cleaning function
@@ -28,7 +31,7 @@ make_bird_data_clean <- function (dirty_data) {
   # declare patterns that offer extra information
   age_patterns <- " AD| SUBAD| IMM| JUV"
   plumage_patterns <- " PL[0-9]+"
-  colour_patterns <- " DRK| INT| LGHT| WHITE"
+  colour_patterns <- " DRK| INT| LGHT| WHITE| LIGHT"
   
   # 3. remove the extra information by removing occurences of each pattern
   birds_clean_data <- birds_clean_col_names %>% 
@@ -42,11 +45,13 @@ make_bird_data_clean <- function (dirty_data) {
            species_abbreviation = str_remove(species_abbreviation, plumage_patterns),
            species_abbreviation = str_remove(species_abbreviation, colour_patterns))
   
-  # write the clean data to new csv
-  birds_clean_data %>% 
+  # verify n cols, write the clean data to new csv
+  birds_clean_data %>%
+    verify(ncol(birds_clean_data) == 6) %>%
+    verify(!str_detect(names(birds_clean_data),"[A-Z]")) %>% 
+    verify(mode(count) == "numeric") %>%
+    verify(is.na(count) | count > 0) %>%
     write_csv("data/clean_data/seabirds.csv")
-  
 }
-
 
 make_bird_data_clean(bird_data)

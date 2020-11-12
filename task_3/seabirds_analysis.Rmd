@@ -1,21 +1,37 @@
 ---
-title: "Seabirds Data Analysis"
+title: "Task 3"
 output:
   html_document:
     df_print: paged
     toc: TRUE
+    toc_float: TRUE
 ---
 
 ```{r, message = FALSE}
 library(tidyverse)
+library(maps)
 
 seabird_data <- read_csv("data/clean_data/birds_and_ship_data.csv")
 
 ```
-### Which bird had the most individual sightings?
+
+# Seabird Sightings Data Analysis
+
+The data have been cleaned, tidied and joined into one clean dataset. This has
+been loaded in along with the tidyverse.
+
+### Most individual sightings
+
+Which bird had the most individual sightings?
+
+This question can be answered first by filtering where count is equal to 1 since
+the question is concerned with individual sightings, not clusters of more than
+1. After grouping by species, the sum of all the sightings of each species can
+be calculated, put in descending order and then cut after the first row.
 
 ```{r}
 seabird_data %>% 
+  # don't need lat/long cols
   select(-lat, -long) %>% 
   filter(count == 1) %>% 
   group_by(species, species_scientific, species_abbreviation) %>% 
@@ -24,7 +40,12 @@ seabird_data %>%
   head(1)
 ```
 
-### Which bird had the highest total count?
+### The most seen
+
+Which bird has the highest total sightings?
+
+After grouping by species, the total count can be calculated in the same way as
+above.
 
 ```{r}
 seabird_data %>% 
@@ -35,7 +56,11 @@ seabird_data %>%
   head(1)
 ```
 
-### Which bird had the highest total count above a latitude of -30?
+### Most seen above -30 lat 
+
+To find the seabird with the most sightings above -30 lattitude, the process is
+above but with a filtration for lat greater than -30.
+
 ```{r}
 seabird_data %>% 
   select(-long) %>% 
@@ -48,7 +73,13 @@ seabird_data %>%
 ```
 
 
-### How many different types of birds were only ever seen in groups of 1?
+### Number of lone-seabirds
+
+How many different types of birds were only ever seen in groups of 1?
+
+The average no in a sighting for each species can be calculated. After filtering
+this new column to where the average no in a sighting is one, the number of rows
+can be counted.
 
 ```{r}
 seabird_data %>% 
@@ -68,23 +99,49 @@ seabird_data %>%
   select(-avg_sightings)
 ```
 
-### How many penguins were seen? (Hint: there are many types of penguin)
+### Penguins
+
+How many penguins were seen?
+
+After converting the species column to lower case, the rows containing penguins
+can be found.
 
 ```{r}
 penguin_pattern <- "penguin"
 
-penguin_sightings <- seabird_data %>% 
+penguins <- seabird_data %>% 
   mutate(species = str_to_lower(species)) %>% 
-  filter(str_detect(species, penguin_pattern)) %>%
+  filter(str_detect(species, penguin_pattern))
+```
+
+```{r}
+penguin_sightings <- penguins %>% 
   summarise(sightings = sum(count, na.rm = TRUE), .groups = 'drop_last') %>% 
   arrange(desc(sightings))
-
 ```
 
+
+Plotting the penguins
+
+First load in the shape of the world map polygon from the maps package.
 ```{r}
-penguin_sightings
+earth_map <- map_data("world")
 ```
 
-```{r}
+Then plot the polygon and the plot each sighting by its lat/long co-ordinate.
+
+After viewing the whole map, the decision was made to zoom in to where the
+sightings were entirely concentrated: the south pacific.
+```{r, warning=FALSE}
+ggplot() +
+  geom_polygon(data = earth_map, aes(x = long, y = lat, group = group),
+               fill = "grey", alpha = 1.5) +
+  geom_point(data = penguins ,
+             aes(x = long, y = lat, colour = species, size = count)) +
+  labs(color = "Species",
+       size = "Count",
+       title = "Penguin Sightings") +
+  xlim(75, 175) +
+  ylim(-70, 0)
 ```
 

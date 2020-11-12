@@ -5425,7 +5425,7 @@ bird_record,record_id,species,species_scientific,species_abbreviation,count
 5424,4130004,Crested tern,Sterna bergii,STEBER,3
 5425,4130005,Flesh-footed shearwater,Puffinus carneipes,PUFCAR,1
 5426,4130005,Wedge-tailed shearwater,Puffinus pacificus,PUFPAC,1
-5427,4130005,Arctic skua,Stercorarius parasiticus LIGHT,STEPAR1,1
+5427,4130005,Arctic skua,Stercorarius parasiticus,STEPAR1,1
 5428,4130005,White-fronted tern,Sterna striata,STESTR,1
 5429,4131001,Shy / White-capped mollymawk,Thallassarche cauta cauta / steadi,THACAUCAUSTE,3
 5430,4131001,Yellow-nosed mollymawk sensu lato,Thalassarche carteri / chlororhynchos,THACARCHL,1
@@ -9070,7 +9070,7 @@ bird_record,record_id,species,species_scientific,species_abbreviation,count
 9069,6001006,Arctic skua,Stercorarius parasiticus,STEPAR1,1
 9070,6002001,Short-tailed shearwater,Puffinus tenuirostris,PUFTEN,NA
 9071,6002001,Australasian gannet,Morus serrator,MORSER,1
-9072,6002001,Arctic skua,Stercorarius parasiticus LIGHT,STEPAR1,1
+9072,6002001,Arctic skua,Stercorarius parasiticus,STEPAR1,1
 9073,6002001,Pacific gull,Larus pacificus,LARPAC,1
 9074,6002001,Southern black-backed gull,Larus dominicanus,LARDOM,NA
 9075,6002001,Red-billed gull,Larus novaehollandiae,LARNOV,NA
