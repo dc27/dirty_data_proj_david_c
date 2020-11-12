@@ -6,7 +6,7 @@ output: html_notebook
 ```{r, message = FALSE}
 library(tidyverse)
 
-dog_survey_data <- read_csv("data/clean_data/dog_survey_data.csv")
+dog_survey_data <- read_csv(here("data/clean_data/dog_survey_data.csv"))
 ```
 
 # Dog Survey Data Analysis

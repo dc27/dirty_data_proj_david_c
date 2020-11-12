@@ -11,7 +11,7 @@ output:
 library(tidyverse)
 library(ggplot2)
 
-rw_data <- read_csv("data/clean_data/clean_rwa.csv")
+rw_data <- read_csv(here("data/clean_data/clean_rwa.csv"))
 ```
 
 # Right-Wing Authoritarianism Survey Response Analysis

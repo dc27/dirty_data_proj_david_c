@@ -7,16 +7,18 @@ output:
     toc_float: true
 ---
 
-
+load in the required packages
 ```{r, message = FALSE}
 library(tidyverse)
+library(here)
+```
 
-decathalon_data <- read_csv("data/clean_data/decathalon_results_data.csv")
+read in the clean data
+```{r, message = FALSE}
+decathalon_data <- read_csv(here("data/clean_data/decathalon_results_data.csv"))
 ```
 
 # Decathalon Data Analysis
-
-The data has been cleaned and tidied.
 
 ### The longest long jump
 
@@ -71,6 +73,7 @@ decathalon_data %>%
   group_by(competition) %>% 
   slice_max(distance_or_time, n = 3)
 ```
+
 ### 400m time impact on points
 
 How does the average points change based on how the athlete performed in th

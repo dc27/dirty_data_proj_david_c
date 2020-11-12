@@ -5,15 +5,14 @@ output:
     df_print: paged
 ---
 
-
 ```{r, message = FALSE}
 library(tidyverse)
+library(here)
 
-candy_data <- read_csv("data/clean_data/all_candy.csv", col_types = cols(
+candy_data <- read_csv(here("data/clean_data/all_candy.csv"), col_types = cols(
   gender = col_character(),
   country = col_character()
 ))
-
 ```
 
 ### What is the total number of candy ratings given across the three years?

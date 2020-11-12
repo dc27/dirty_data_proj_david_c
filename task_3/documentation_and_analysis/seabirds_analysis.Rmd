@@ -9,9 +9,10 @@ output:
 
 ```{r, message = FALSE}
 library(tidyverse)
+library(here)
 library(maps)
 
-seabird_data <- read_csv("data/clean_data/birds_and_ship_data.csv")
+seabird_data <- read_csv(here("data/clean_data/birds_and_ship_data.csv"))
 ```
 
 ## Cleaning process

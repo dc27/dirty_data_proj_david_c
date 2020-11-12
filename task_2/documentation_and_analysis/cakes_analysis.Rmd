@@ -9,8 +9,9 @@ output:
 
 ```{r, message=FALSE}
 library(tidyverse)
+library(here)
 
-cake_data <- read_csv("data/clean_data/clean_cake_data.csv")
+cake_data <- read_csv(here("data/clean_data/clean_cake_data.csv"))
 
 ```
 
