@@ -12,8 +12,30 @@ library(here)
 dog_survey_data <- read_csv(here("data/clean_data/dog_survey_data.csv"))
 ```
 
-# Dog Survey Data Analysis
+# Dog Survey Response Analysis
 
+## Data Cleaning Process
+
+The dirty data has been passed through a cleaning script which has:
+
++ removed duplicate rows in the data
++ taken a subset of only the desired columns
++ separated rows where necessary so that each separate dog had its own row
++ standardised the size and gender columns, using patterns to identify and
+aggregate common expressions
+
+```{r, echo = TRUE, eval = FALSE}
+female_pattern <- "female|girl"
+
+str_detect(dog_gender, female_pattern) ~ "f"
+```
+
++ changed columns into correct type by extracting only the numbers from the
+`amount_spent_on_dog_food` column
+
++ written the clean data to a new file, ready for analysis
+
+## Data Analysis
 
 ### Valid email addresses
 
