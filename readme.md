@@ -23,9 +23,16 @@ To run the analysis:
 
 - pull this repository
 - open the desired task directory in RStudio
+- navigate to the documentation and analysis directory
+- open the analysis file
 - either:
 - - run all chunks OR
 - - knit to html
+
+To view the analysis results:
+
+after pulling the repository, the analysis file: ____.html should be able to be
+viewed when opened in a web browser.
 
 The analysis for each task uses the clean data. The cleaning scripts should
 not need to be run but they are included for reference.

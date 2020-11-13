@@ -8,17 +8,75 @@ output:
 ---
 
 ```{r, message = FALSE}
+# load in the required packages
 library(tidyverse)
+library(here)
 library(ggplot2)
 
+# read in the clean data
 rw_data <- read_csv(here("data/clean_data/clean_rwa.csv"))
 ```
 
 # Right-Wing Authoritarianism Survey Response Analysis
 
-The RWA survey data has been clean and average right-wing-authoritarian response
-score has been calculated. The score indicates on a scale of 1 - 10 how RWA the
-participant's responses were, with 1 being not RWA and 10 being heavily RWA. 
+## Data Cleaning Process
+
+The initial dirty data has been passed through a cleaning script which has:
+
++ added a unique ID no for each participant
++ lengthened the data - initially each question number had it's own column. This
+was changed to long form for wrangling. Each question for each participant had
+one row. Multiple rows are now attributed to each participant.
++ taken a subset of the columns of the dirty data - only the survey responses
+relating to RWA index were desired for analysis.
++ converted reverse scoring questions to the correct score:
+
+```{r, eval = FALSE, echo = TRUE}
+    mutate(response = case_when(
+      survey_question == 4|6|8|9|11|13|15|18|20|21 ~ 10 - response,
+      TRUE ~ response
+    ))
+```
+
++ converted 0 responses to NA so they can be excluded (the survey responses
+should only be between 1 and 10 (inclusive)).
++ calculated an average RWA index for each participant and added this to a new
+column. NA values have been included so if a participant failed to respond to a
+question their average RWAI will be NA. This is to keep the average calculation
+consistent for all participants:
+
+```{r, eval = FALSE, echo = TRUE}
+    group_by(participant_no) %>% 
+    filter(survey_question > 2) %>% 
+    mutate(avg_rwa = mean(response, na.rm = FALSE)) 
+```
+
++ recoded several columns so that they include more information. e.g.
+
+```{r, eval = FALSE, echo = TRUE}
+
+marital_statuses <- c("never married",
+                        "currently married",
+                        "previously married")
+
+married = case_when(
+      married == 1 ~ marital_statuses[1],
+      married == 2 ~ marital_statuses[2],
+      married == 3 ~ marital_statuses[3]
+    )
+
+```
+
++ renamed columns to more appropriate names and so they are in accordance with
+syle guide
+
++ filtered non-sensical data: e.g. family size > 13, or age < 0 where false 
+data has clearly been entered. Only where the data is clearly false, has it
+been removed.
+
++ asserted the data is in clean form
+
++ written the now-clean data to a new CSV, ready for analysis
 
 ### Average RWA score per gender
 
@@ -130,7 +188,9 @@ avg_per_age_band <- rw_data %>%
   )) %>%
   select(participant_no, age_band, avg_rwa) %>% 
   group_by(age_band) %>% 
-  summarise(avg_rwa_for_age_band = mean(avg_rwa, na.rm = TRUE), .groups = 'drop_last')
+  summarise(avg_rwa_for_age_band = mean(avg_rwa, na.rm = TRUE),
+            .groups = 'drop_last') %>% 
+  drop_na()
 ```
 
 The average right wing authoritarian index score can be plotted for each age
@@ -152,7 +212,8 @@ ggplot() +
 avg_rwa_per_country <- rw_data %>% 
   group_by(country_ip) %>% 
   summarise(average_rwa = mean(avg_rwa, na.rm = TRUE),
-            .groups = 'drop_last')
+            .groups = 'drop_last') %>% 
+  drop_na()
 ```
 
 ```{r, eval=TRUE, echo=FALSE}
@@ -229,6 +290,7 @@ the average for each classification can be calculated.
 ```{r}
 rw_data %>% 
   group_by(urban_classification) %>% 
-  summarise(mean(avg_rwa, na.rm = TRUE), .groups = "drop_last")
+  summarise(mean(avg_rwa, na.rm = TRUE), .groups = "drop_last") %>% 
+  drop_na()
 ```
 

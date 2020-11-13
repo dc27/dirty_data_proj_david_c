@@ -43,7 +43,7 @@ make_survey_data_clean <- function(dirty_data) {
   dirty_data_with_avg <- correct_responses_subset_long %>% 
     group_by(participant_no) %>% 
     filter(survey_question > 2) %>% 
-    mutate(avg_rwa = mean(response)) %>% 
+    mutate(avg_rwa = mean(response, na.rm = FALSE)) %>% 
     select(-survey_question, -response) %>% 
     unique()
   
