@@ -1,10 +1,13 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Task 6"
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r, message = FALSE}
 library(tidyverse)
+library(here)
 
 dog_survey_data <- read_csv(here("data/clean_data/dog_survey_data.csv"))
 ```
