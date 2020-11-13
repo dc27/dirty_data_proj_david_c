@@ -1,5 +1,5 @@
 ---
-title: "Halloween Candy Analysis"
+title: "Task 4"
 output:
   html_document:
     df_print: paged
@@ -9,13 +9,86 @@ output:
 library(tidyverse)
 library(here)
 
+# columns were not reading correctly as first 1000+ entries are NA for these
+# columns. Hence they have been directly assigned the correct column types.
 candy_data <- read_csv(here("data/clean_data/all_candy.csv"), col_types = cols(
   gender = col_character(),
   country = col_character()
 ))
 ```
 
-### What is the total number of candy ratings given across the three years?
+# Halloween Candy Survey Analysis
+
+## Data Cleaning Process
+
+The initial dirty data exists in the three separate files which have been
+individually cleaned and then combined (with a bind).
+
+The dirty data has been passed through a cleaning script which has:
+
++ cleaned the column names
++ removed columns not relevant to analysis (e.g. "Please estimate the degrees of
+separation between you and Beyonce")
++ renamed columns for consistency across the three independent datasets - 
+sometimes the same candies appear under slightly different names:
+
+```{r, echo = TRUE, eval = FALSE}
+peanut_m_ms = peanut_m_m_s,
+bonkers_the_candy = bonkers
+```
+
++ only accept integer values for age: in some cases the data was entered as a
+double number (35.0) or text. Text ages have been converted to NA and any
+numerical value converted to the closest whole number.
+
+Each dirty data file was passed through a bespoke script as there were few
+cleaning operations that applied to all 3. (They were each dirty in their own,
+unique way)
+
+After being cleaned, the data was passed through another script which:
+
++ passed each dataset through a function, converting them to a standard long format
+
+```{r, echo = TRUE, eval = FALSE}
+make_data_long <- function (wide_data) {
+  long_data <- wide_data %>% 
+    pivot_longer(-year & -going_out & -gender & -age & -country,
+                 names_to = "candy",
+                 values_to = "reaction") %>%
+    select(year, age, gender, country, going_out, candy, reaction)
+}
+```
+
++ passed each dataset through a function, filtering out "empty" rows in the data
+
+```{r, echo = TRUE, eval = FALSE}
+remove_empty_rows <- function(data) {
+  data %>%
+  verify(ncol(data)==7)
+  
+  filtered_data <- data %>% 
+    filter(!(is.na(going_out) &
+               is.na(gender) &
+               is.na(age) &
+               is.na(country) &
+               is.na(reaction)))
+}
+```
+
++ used a row bind operation to combine the three datasets into one large dataset
++ cleaned up the country column by using country-specific string patterns:
+`UK_patterns <- "u[.]*k|in[g]*[d]*om|england|scotland"`
++ in cases where no age was recorded AND a number was recorded in the country
+column, the number has been assumed to correspond to the respondents age and
+moved to the appropriate column.
++ assigned each recognised country pattern to one of the desired countries:
+USA, UK, Canada, Other
+
+## Analysis
+
+### Candy Ratings
+
+What is the total number of candy ratings given across the three years?
 
 The question asks us to count the number of candy ratings, discounting any NAs.
 ```{r}
@@ -29,7 +102,9 @@ the three years is: *
 n_ratings
 ```
 
-### What was the average age of people who are going out trick or treating?
+### Trick or Treating age
+
+What was the average age of people who are going out trick or treating?
 
 The data has a variable `going_out` which relates to whether or not people went
 trick or treating. TRUE indicates they went out.
@@ -52,7 +127,9 @@ The average age of trick or treaters across all three years was found to be:
 ```{r, echo=FALSE, eval=TRUE}
 average_age_extroverts
 ```
-### How does this compare to the average age of people who stay inside?
+### Trick or Treat abstainers
+
+How does this compare to the average age of people who stay inside?
 
 The process is the same as previously, but filtering `going_out` is FALSE -
 indicating the person did not go trick or treating.
@@ -71,7 +148,10 @@ The average age of people who did not go trick or treating was:
 ```{r, echo=FALSE, eval=TRUE}
 average_age_introverts
 ```
-### For each of joy, despair, and meh, which candy bar revived the most of these ratings?
+### Joy / Despair / Meh
+
+For each of joy, despair, and meh, which candy bar revived the most of these
+ratings?
 
 Calculation process:
 
@@ -88,7 +168,9 @@ only_joy <- candy_data %>%
   summarise(joyful_reactions = mean(n), .groups = 'drop') %>% 
   arrange(desc(joyful_reactions))
 ```
+
 To calculate only the reactions of "meh":
+
 ```{r}
 only_apathy <- candy_data %>% 
   filter(reaction == "MEH") %>% 
@@ -97,7 +179,9 @@ only_apathy <- candy_data %>%
   summarise(mehful_reactions = mean(n), .groups = 'drop') %>% 
   arrange(desc(mehful_reactions))
 ```
+
 To calculate only the reactions of despair
+
 ```{r}
 only_despair <- candy_data %>% 
   filter(reaction == "DESPAIR") %>% 
@@ -107,7 +191,9 @@ only_despair <- candy_data %>%
   arrange(desc(woeful_reactions))
 ```
 
-### How many people rated Starburst as despair?
+### Starbust Sadness
+
+How many people rated Starburst as despair?
 
 ```{r}
 saddened_by_starburst <- candy_data %>% 
@@ -115,7 +201,6 @@ saddened_by_starburst <- candy_data %>%
          candy == "starburst") %>% 
   nrow()
 ```
-
 
 
 ```{r}
@@ -132,7 +217,9 @@ For the next three questions apply the following conversion:
 |Despair|-1|
 |Meh| 0|
 
-### What was the most popular candy bar for each gender in the dataset?
+### The Loved
+
+What was the most popular candy bar for each gender in the dataset?
 
 To find the the most popular candy for each gender, first take a selection of
 only the desired columns - in this case: `candy`, `gender`, and `reaction`.
@@ -159,7 +246,9 @@ popular as well for further comparison.
 favourites_by_gender
 ```
 
-### What was the most popular candy bar in each year?
+### Year-by-year most popular
+
+What was the most popular candy bar in each year?
 
 To find the highest scoring candy for each year, the process is similar to
 above. Selecting year and then grouping by candy, a score for each can be
@@ -184,7 +273,9 @@ The top 2 are listed. "any full sized candy bar" is a common high scorer.
 favourites_by_year
 ```
 
-### What was the most popular candy bar for people in US, Canada, UK and all other countries?
+### Candy Preference by Country
+
+What was the most popular candy bar for people in US, Canada, UK and all other countries?
 
 The rating process is the same as before. This time the country column is
 selected. The data has already been wrangled into the three desired countries,

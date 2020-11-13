@@ -78,6 +78,8 @@ been removed.
 
 + written the now-clean data to a new CSV, ready for analysis
 
+## Analysis
+
 ### Average RWA score per gender
 
 Gender is one of the collected variables, so they can be grouped together based
