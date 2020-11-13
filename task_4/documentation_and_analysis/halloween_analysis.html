@@ -1719,8 +1719,9 @@ bonkers_the_candy = bonkers</code></pre>
 </div>
 <div id="analysis" class="section level2">
 <h2>Analysis</h2>
-<div id="what-is-the-total-number-of-candy-ratings-given-across-the-three-years" class="section level3">
-<h3>What is the total number of candy ratings given across the three years?</h3>
+<div id="candy-ratings" class="section level3">
+<h3>Candy Ratings</h3>
+<p>What is the total number of candy ratings given across the three years?</p>
 <p>The question asks us to count the number of candy ratings, discounting any NAs.</p>
 <pre class="r"><code>n_ratings &lt;- candy_data %&gt;%
   filter(!is.na(reaction)) %&gt;% 
@@ -1728,8 +1729,9 @@ bonkers_the_candy = bonkers</code></pre>
 <p>After the filtering any NA reactions: the total number of candy ratings across the three years is: *</p>
 <pre><code>## [1] 772352</code></pre>
 </div>
-<div id="what-was-the-average-age-of-people-who-are-going-out-trick-or-treating" class="section level3">
-<h3>What was the average age of people who are going out trick or treating?</h3>
+<div id="trick-or-treating-age" class="section level3">
+<h3>Trick or Treating age</h3>
+<p>What was the average age of people who are going out trick or treating?</p>
 <p>The data has a variable <code>going_out</code> which relates to whether or not people went trick or treating. TRUE indicates they went out.</p>
 <p>Filtering the data for the case when <code>going_out</code> is TRUE gives the subset of people who went trick or treating. Then looking at one candy that appears every year (this way each person will appear in the data only once), the data can be summarised and the average age can be found.</p>
 <pre class="r"><code>average_age_extroverts &lt;- candy_data %&gt;% 
@@ -1741,8 +1743,9 @@ bonkers_the_candy = bonkers</code></pre>
 <p>The average age of trick or treaters across all three years was found to be:</p>
 <pre><code>## [1] 35.14441</code></pre>
 </div>
-<div id="how-does-this-compare-to-the-average-age-of-people-who-stay-inside" class="section level3">
-<h3>How does this compare to the average age of people who stay inside?</h3>
+<div id="trick-or-treat-abstainers" class="section level3">
+<h3>Trick or Treat abstainers</h3>
+<p>How does this compare to the average age of people who stay inside?</p>
 <p>The process is the same as previously, but filtering <code>going_out</code> is FALSE - indicating the person did not go trick or treating.</p>
 <pre class="r"><code>average_age_introverts &lt;- candy_data %&gt;% 
   filter(going_out == FALSE) %&gt;%
@@ -1753,8 +1756,9 @@ bonkers_the_candy = bonkers</code></pre>
 <p>The average age of people who did not go trick or treating was:</p>
 <pre><code>## [1] 39.16734</code></pre>
 </div>
-<div id="for-each-of-joy-despair-and-meh-which-candy-bar-revived-the-most-of-these-ratings" class="section level3">
-<h3>For each of joy, despair, and meh, which candy bar revived the most of these ratings?</h3>
+<div id="joy-despair-meh" class="section level3">
+<h3>Joy / Despair / Meh</h3>
+<p>For each of joy, despair, and meh, which candy bar revived the most of these ratings?</p>
 <p>Calculation process:</p>
 <p>The data has a variable <code>reaction</code> which relates to the ratings of the question. i.e. joy, despair, and meh. By filtering this column, the total reactions of each type can be calculated.</p>
 <p>To calculate only the reactions of joy:</p>
@@ -1779,8 +1783,9 @@ bonkers_the_candy = bonkers</code></pre>
   summarise(woeful_reactions = mean(n), .groups = &#39;drop&#39;) %&gt;% 
   arrange(desc(woeful_reactions))</code></pre>
 </div>
-<div id="how-many-people-rated-starburst-as-despair" class="section level3">
-<h3>How many people rated Starburst as despair?</h3>
+<div id="starbust-sadness" class="section level3">
+<h3>Starbust Sadness</h3>
+<p>How many people rated Starburst as despair?</p>
 <pre class="r"><code>saddened_by_starburst &lt;- candy_data %&gt;% 
   filter(reaction == &quot;DESPAIR&quot;,
          candy == &quot;starburst&quot;) %&gt;% 
@@ -1812,8 +1817,9 @@ bonkers_the_candy = bonkers</code></pre>
 </tbody>
 </table>
 </div>
-<div id="what-was-the-most-popular-candy-bar-for-each-gender-in-the-dataset" class="section level3">
-<h3>What was the most popular candy bar for each gender in the dataset?</h3>
+<div id="the-loved" class="section level3">
+<h3>The Loved</h3>
+<p>What was the most popular candy bar for each gender in the dataset?</p>
 <p>To find the the most popular candy for each gender, first take a selection of only the desired columns - in this case: <code>candy</code>, <code>gender</code>, and <code>reaction</code>. Convert each reaction into the score, group the entries and then sum to get the total score for each candy for each gender.</p>
 <pre class="r"><code>favourites_by_gender &lt;- candy_data %&gt;% 
   select(candy, gender, reaction) %&gt;%
@@ -1832,8 +1838,9 @@ bonkers_the_candy = bonkers</code></pre>
   </script>
 </div>
 </div>
-<div id="what-was-the-most-popular-candy-bar-in-each-year" class="section level3">
-<h3>What was the most popular candy bar in each year?</h3>
+<div id="year-by-year-most-popular" class="section level3">
+<h3>Year-by-year most popular</h3>
+<p>What was the most popular candy bar in each year?</p>
 <p>To find the highest scoring candy for each year, the process is similar to above. Selecting year and then grouping by candy, a score for each can be calculated with <code>sum</code> and then a slice can be taken to see the highest scorers.</p>
 <pre class="r"><code>favourites_by_year &lt;- candy_data %&gt;% 
   select(candy, year, reaction) %&gt;%
@@ -1852,8 +1859,9 @@ The top 2 are listed. “any full sized candy bar” is a common high scorer.
   </script>
 </div>
 </div>
-<div id="what-was-the-most-popular-candy-bar-for-people-in-us-canada-uk-and-all-other-countries" class="section level3">
-<h3>What was the most popular candy bar for people in US, Canada, UK and all other countries?</h3>
+<div id="candy-preference-by-country" class="section level3">
+<h3>Candy Preference by Country</h3>
+<p>What was the most popular candy bar for people in US, Canada, UK and all other countries?</p>
 <p>The rating process is the same as before. This time the country column is selected. The data has already been wrangled into the three desired countries, other countries, and NA (where either no country was provided, or there was an error with the entry.) Again grouping for each distinct candy and then taking a slice of the summary, the highest scoring candies for each country can be examined.</p>
 <pre class="r"><code>favourites_by_country &lt;- candy_data %&gt;% 
   select(candy, country, reaction) %&gt;% 

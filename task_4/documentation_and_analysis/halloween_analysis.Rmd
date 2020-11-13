@@ -242,7 +242,7 @@ favourites_by_gender <- candy_data %>%
 The question asked for the most popular but I've included the second most
 popular as well for further comparison.
 
-```{r, echo=FALSE, eval=TRUE}
+```{r, echo =FALSE, eval=TRUE}
 favourites_by_gender
 ```
 
@@ -304,5 +304,23 @@ The question asked for the top 1 candy, but the top two have been included since
 favourites_by_country
 ```
 
+Plotting candy preferences
 
+```{r}
+counting_despair <- candy_data %>%
+  group_by(candy) %>% 
+  add_count(reaction, name = "n_reaction") %>%
+  select(candy, reaction, n_reaction) %>% 
+  unique() %>% 
+  drop_na(reaction) %>%
+  pivot_wider(names_from = reaction, values_from = n_reaction) %>% 
+  drop_na()
+
+```
+
+```{r}
+ggplot(counting_despair, aes(x = DESPAIR, y = JOY), label = candy) +
+  geom_point() +geom_text(aes(label=candy),hjust=0, vjust=0)
+
+```
 
