@@ -7,18 +7,30 @@ output:
     toc_float: true
 ---
 
-load in the required packages
 ```{r, message = FALSE}
+# load in the required packages
 library(tidyverse)
 library(here)
 ```
 
-read in the clean data
 ```{r, message = FALSE}
+# read in the clean data
 decathalon_data <- read_csv(here("data/clean_data/decathalon_results_data.csv"))
 ```
 
 # Decathalon Data Analysis
+
+## Data Cleaning Process
+
+The dirty data has been passed through a cleaning script which has:
+
++ cleaned the names of the variables to a standard form
++ removed the row names and stored them in a new column: `names`
++ converted the data to long form to conform with tidyness guidelines. Now,
+instead of each event having its own column, there is a single column for all
+events and another column for the distance/time.
+
+## Data Analysis
 
 ### The longest long jump
 

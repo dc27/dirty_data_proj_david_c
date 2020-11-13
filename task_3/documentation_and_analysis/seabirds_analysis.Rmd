@@ -8,12 +8,16 @@ output:
 ---
 
 ```{r, message = FALSE}
+# load in the required packages
 library(tidyverse)
 library(here)
 library(maps)
 
+# read in the clean data
 seabird_data <- read_csv(here("data/clean_data/birds_and_ship_data.csv"))
 ```
+
+# Seabird Sightings Data Analysis
 
 ## Cleaning process
 
@@ -22,36 +26,38 @@ seabird sightings and the ships they were sighted from.
 
 ### Cleaning the seabirds data:
 
-Only a subset of the data was required for analysis: `record`, `record_id`,
+The seabirds data has been passed through a cleaning script which has:
+
++ taken a subset of only the data required for analysis: `record`, `record_id`,
 `species`, `species_scientific` - which refers to the scientific name for each
 spieces -, `species_abbreviation`, and `count`. Only these variables were
 retained from the raw seabirds data.
 
-The column (variable) names listed above were brought into accordance with the
-style guide - snake_case, and extraneous data relating to
++ brought the column (variable) names listed above into accordance with the
+style guide - snake_case, 
 
-- plumage
-- age
-- plumage patterns
++ removed extraneous data relating to
++ + plumage
++ + age
++ + plumage patterns
 
-was removed from the `species`, `species_scientific`, and `species_abbreviation`
+  from the `species`, `species_scientific`, and `species_abbreviation`
 variables with an `str_detect` function, which filtered out the patterns that
 were not relevant for the analysis i.e. the distinction between the ages of the
 same species of bird is not something that this analysis is concerned with.
 
-This was saved to a new clean seabirds data file to be used later.
++ saved the clean seabirds data to a new file to be used later.
 
-### Cleaning the ships data:
+### Cleaning the ships data:
 
-Again, only a subset of the initial data was required for this analysis. From
-the ships data, only: `record`, `record_id`, and the latitude/longitude columns
-were needed.
+The ships data has been passed through a cleaning script which has:
 
-The names of these columns were brought into accordance with the style guide.
++ taken only a subset of the initial data required for this analysis. Only:
+`record`, `record_id`, and the latitude/longitude columns were needed.
 
-No further cleaning of the ships data was done.
++ brought the column names into accordance with the style guide.
 
-The cleaned ships data was saved to a new file to be used later.
++ saved the clean data to a new file to be used later.
 
 ### Combining the birds and ships data:
 
@@ -62,27 +68,30 @@ analysis.
 
 ### Assumptions:
 
-where count was recorded as 0. This has been changed to NA for analysis.
+1. where count was recorded as 0. This has been changed to NA for analysis. It
+was decided 0 cannot be counted as 1 or greater than 1.
 
-Reasoning: 0 cannot be counted as 1 or greater than 1.
-
-the same classification of species is used throughout. i.e. where AD is
+2. the same classification of species is used throughout. i.e. where AD is
 suffixed to indicate the age of a bird. In all cases, any suffix to the species
 data which could be considered as a suffix has been removed. (e.g. AD = adult,
-PL1 = plumage pattern 1, DRK = dark plumage colour)
+PL1 = plumage pattern 1, DRK = dark plumage colour).
 
-Reasoning: the distinction of bird age, plumage type, or colour is not required
++ Reasoning: the distinction of bird age, plumage type, or colour is not required
 for the analysis. Including unnecessary data would directly influence the
 results.
 
+3. It is assumed that `record`, `record_id`, `count` are all integers
 
+4. It is assumed the data has been recorded correctly.
 
-It is assumed that `record`, `record_id`, 
-The steps you took to clean the data (you don’t need to write out in detail every step, but a combination of commented code chunks with surrounding overall explanations would be great).
-The answers to the questions presented in the task brief
-Any other interesting analyses or conclusions you come across.
+### Assertions:
 
-# Seabird Sightings Data Analysis
++ the columns must be the correct type before analysis,
++ there must be the correct number of columns in each dataset before analysis,
++ lat/longs must be within a certain range - (-90 - 90/ -180 - 180),
++ count must be within a certain range ( >0 ).
+
+## Data Analysis
 
 The data have been cleaned, tidied and joined into one clean dataset. This hass
 been loaded in along with the tidyverse.
@@ -188,7 +197,7 @@ penguin_sightings <- penguins %>%
 ```
 
 
-Plotting the penguins
+### Plotting the penguins
 
 First load in the shape of the world map polygon from the maps package.
 ```{r}
@@ -213,10 +222,5 @@ ggplot() +
 ```
 
 
-### Assertations:
 
-+ the columns must be the correct type before analysis,
-+ there must be the correct number of columns in each dataset before analysis,
-+ lat/longs must be within a certain range - (-90 - 90/ -180 - 180),
-+ count must be within a certain range ( >0 ).
 

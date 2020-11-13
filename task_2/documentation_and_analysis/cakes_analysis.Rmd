@@ -1,5 +1,5 @@
 ---
-title: "Cake Data Analysis"
+title: "Task 2"
 output:
   html_document:
     df_print: paged
@@ -7,15 +7,50 @@ output:
     toc_float: true
 ---
 
-```{r, message=FALSE}
+```{r, message = FALSE}
+# load in the tidyverse
 library(tidyverse)
 library(here)
 
+# read in the clean data
 cake_data <- read_csv(here("data/clean_data/clean_cake_data.csv"))
 
 ```
 
 # Cake Data Analysis
+
+## Data Cleaning Process
+
+The dirty data has been passed through a cleaning script which has:
+
++ converted the tibble to long format with one column for all ingredients and
+another for the measurement
+
++ joined the ingredient tibble using the ingredient codes as a foreign key -
+primary key pair. This resulted in the cake tibble containing the full names of
+the ingredients and not just their code.
+
++ removed the cake codes from the tibble for clarity
+
++ introduced two columns to show standardised measures allowing for easier
+comparison:
+
+```{r, echo = TRUE, eval = FALSE}
+  with_standard_measures <- subset_long_data %>% 
+    mutate(liquid_quantity = case_when(
+      measure == "cup" ~ 48 * quantity,
+      measure == "tablespoon" ~ 16 * quantity,
+      measure == "teaspoon" ~ 1*quantity)) %>% 
+    mutate(solid_quantity = case_when(
+      measure == "once" ~ 1 * quantity,
+      measure == "pound" ~ 16 * quantity,
+      measure == "quart" ~ 32 * quantity
+    ))
+```
+
++ written the clean data to a new file, ready for analysis.
+
+## Data Analysis
 
 The cake data has been cleaned, tidied and combined with the ingredients
 information.
