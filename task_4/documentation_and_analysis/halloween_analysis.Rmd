@@ -314,13 +314,16 @@ counting_despair <- candy_data %>%
   unique() %>% 
   drop_na(reaction) %>%
   pivot_wider(names_from = reaction, values_from = n_reaction) %>% 
-  drop_na()
+  drop_na() %>% 
+  mutate(colour = ifelse(JOY/DESPAIR > 1, "orange", "purple"))
 
 ```
 
 ```{r}
-ggplot(counting_despair, aes(x = DESPAIR, y = JOY), label = candy) +
-  geom_point() +geom_text(aes(label=candy),hjust=0, vjust=0)
+ggplot(counting_despair, aes(x = DESPAIR, y = JOY, color = colour), label = candy) +
+  geom_point()+
+  geom_text(aes(label=candy), size = 1.5,hjust=0.5, vjust=-1, color = "black") +
+  scale_color_identity()
 
 ```
 
