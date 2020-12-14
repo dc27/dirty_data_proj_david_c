@@ -37,14 +37,15 @@ viewed when opened in a web browser.
 The analysis for each task uses the clean data. The cleaning scripts should
 not need to be run but they are included for reference.
 
-data sources:
+## Data sources
+
 | Task No. | Data Info | url |
 |----------|-----------|-----|
 |Task 1|Decathalon Data|https://husson.github.io/img/decathlon.csv|
 |Task 2|Cake List|data(cake.ingredients.1961)*|
 |Task 3|Seabirds and Ships|https://www.tepapa.govt.nz/sites/default/files/asms_10min_seabird_counts_final.xls/|
 |Task 4|Candy Data Info|https://www.scq.ubc.ca/so-much-candy-data-seriously/|
-|Task 5|RWA Survey Data||
+|Task 5|RWA Survey Data|https://openpsychometrics.org/_rawdata/|
 |Task 6|Dog Owner Survey||
 
  
