@@ -46,7 +46,9 @@ not need to be run but they are included for reference.
 |Task 3|Seabirds and Ships|https://www.tepapa.govt.nz/sites/default/files/asms_10min_seabird_counts_final.xls/|
 |Task 4|Candy Data Info|https://www.scq.ubc.ca/so-much-candy-data-seriously/|
 |Task 5|RWA Survey Data|https://openpsychometrics.org/_rawdata/|
-|Task 6|Dog Owner Survey||
+|Task 6|Dog Owner Survey|(https://github.com/dc27/dirty_data_proj_david_c/tree/master/task_6/data/raw_data)**|
 
  
-*the data can be accessed in R with this command 
+*the data can be accessed in R with this command  
+** this was mock data generated using the realistic random generator:
+[mockaroo](https://www.mockaroo.com/)
