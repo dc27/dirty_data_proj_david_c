@@ -3,6 +3,9 @@ title: "Task 4"
 output:
   html_document:
     df_print: paged
+    number_sections: yes
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r, message = FALSE}
@@ -11,8 +14,8 @@ library(here)
 
 # columns were not reading correctly as first 1000+ entries are NA for these
 # columns. Hence they have been directly assigned the correct column types.
-candy_data <- read_csv(here("data/clean_data/all_candy.csv"), col_types = cols(
-  gender = col_character(),
+candy_data <- read_csv(here("data/clean_data/candy.csv"), col_types = cols(
+  sex = col_character(),
   country = col_character()
 ))
 ```
@@ -52,10 +55,10 @@ After being cleaned, the data was passed through another script which:
 ```{r, echo = TRUE, eval = FALSE}
 make_data_long <- function (wide_data) {
   long_data <- wide_data %>% 
-    pivot_longer(-year & -going_out & -gender & -age & -country,
+    pivot_longer(-year & -trick_treating & -sex & -age & -country,
                  names_to = "candy",
-                 values_to = "reaction") %>%
-    select(year, age, gender, country, going_out, candy, reaction)
+                 values_to = "rating") %>%
+    select(year, age, sex, country, trick_treating, candy, rating)
 }
 ```
 
@@ -67,11 +70,11 @@ remove_empty_rows <- function(data) {
   verify(ncol(data)==7)
   
   filtered_data <- data %>% 
-    filter(!(is.na(going_out) &
-               is.na(gender) &
+    filter(!(is.na(trick_treating) &
+               is.na(sex) &
                is.na(age) &
                is.na(country) &
-               is.na(reaction)))
+               is.na(rating)))
 }
 ```
 
@@ -93,10 +96,10 @@ What is the total number of candy ratings given across the three years?
 The question asks us to count the number of candy ratings, discounting any NAs.
 ```{r}
 n_ratings <- candy_data %>%
-  filter(!is.na(reaction)) %>% 
+  filter(!is.na(rating)) %>% 
   nrow()
 ```
-After the filtering any NA reactions: the total number of candy ratings across
+After the filtering any NA ratings: the total number of candy ratings across
 the three years is: *
 ```{r, echo=FALSE, eval=TRUE}
 n_ratings
@@ -106,16 +109,16 @@ n_ratings
 
 What was the average age of people who are going out trick or treating?
 
-The data has a variable `going_out` which relates to whether or not people went
+The data has a variable `trick_treating` which relates to whether or not people went
 trick or treating. TRUE indicates they went out.
 
-Filtering the data for the case when `going_out` is TRUE gives the subset of
+Filtering the data for the case when `trick_treating` is TRUE gives the subset of
 people who went trick or treating. Then looking at one candy that appears every
 year (this way each person will appear in the data only once), the data can be
 summarised and the average age can be found.
 ```{r}
 average_age_extroverts <- candy_data %>% 
-  filter(going_out == TRUE) %>%
+  filter(trick_treating == TRUE) %>%
   filter(candy == "snickers") %>% 
   select(age) %>%
   summarise(average_age = mean(age, na.rm = TRUE)) %>% 
@@ -131,12 +134,12 @@ average_age_extroverts
 
 How does this compare to the average age of people who stay inside?
 
-The process is the same as previously, but filtering `going_out` is FALSE -
+The process is the same as previously, but filtering `trick_treating` is FALSE -
 indicating the person did not go trick or treating.
 
 ```{r}
 average_age_introverts <- candy_data %>% 
-  filter(going_out == FALSE) %>%
+  filter(trick_treating == FALSE) %>%
   filter(candy == "snickers") %>% 
   select(age) %>%
   summarise(average_age = mean(age, na.rm = TRUE)) %>% 
@@ -155,40 +158,40 @@ ratings?
 
 Calculation process:
 
-The data has a variable `reaction` which relates to the ratings of the question.
-i.e. joy, despair, and meh. By filtering this column, the total reactions of
+The data has a variable `rating` which relates to the ratings of the question.
+i.e. joy, despair, and meh. By filtering this column, the total ratings of
 each type can be calculated.
 
-To calculate only the reactions of joy:
+To calculate only the ratings of joy:
 ```{r}
 only_joy <- candy_data %>% 
-  filter(reaction == "JOY") %>% 
+  filter(rating == "JOY") %>% 
   add_count(candy) %>% 
   group_by(candy) %>%
-  summarise(joyful_reactions = mean(n), .groups = 'drop') %>% 
-  arrange(desc(joyful_reactions))
+  summarise(joyful_ratings = mean(n), .groups = 'drop') %>% 
+  arrange(desc(joyful_ratings))
 ```
 
-To calculate only the reactions of "meh":
+To calculate only the ratings of "meh":
 
 ```{r}
 only_apathy <- candy_data %>% 
-  filter(reaction == "MEH") %>% 
+  filter(rating == "MEH") %>% 
   add_count(candy) %>% 
   group_by(candy) %>%
-  summarise(mehful_reactions = mean(n), .groups = 'drop') %>% 
-  arrange(desc(mehful_reactions))
+  summarise(mehful_ratings = mean(n), .groups = 'drop') %>% 
+  arrange(desc(mehful_ratings))
 ```
 
-To calculate only the reactions of despair
+To calculate only the ratings of despair
 
 ```{r}
 only_despair <- candy_data %>% 
-  filter(reaction == "DESPAIR") %>% 
+  filter(rating == "DESPAIR") %>% 
   add_count(candy) %>% 
   group_by(candy) %>%
-  summarise(woeful_reactions = mean(n), .groups = 'drop') %>% 
-  arrange(desc(woeful_reactions))
+  summarise(woeful_ratings = mean(n), .groups = 'drop') %>% 
+  arrange(desc(woeful_ratings))
 ```
 
 ### Starbust Sadness
@@ -197,7 +200,7 @@ How many people rated Starburst as despair?
 
 ```{r}
 saddened_by_starburst <- candy_data %>% 
-  filter(reaction == "DESPAIR",
+  filter(rating == "DESPAIR",
          candy == "starburst") %>% 
   nrow()
 ```
@@ -211,7 +214,7 @@ saddened_by_starburst
 
 For the next three questions apply the following conversion:
 
-|Reaction|Scoring|
+|rating|Scoring|
 |---|---|
 |Joy| 1|
 |Despair|-1|
@@ -219,23 +222,23 @@ For the next three questions apply the following conversion:
 
 ### The Loved
 
-What was the most popular candy bar for each gender in the dataset?
+What was the most popular candy bar for each sex in the dataset?
 
-To find the the most popular candy for each gender, first take a selection of
-only the desired columns - in this case: `candy`, `gender`, and `reaction`.
-Convert each reaction into the score, group the entries and then sum to get the
-total score for each candy for each gender.
+To find the the most popular candy for each sex, first take a selection of
+only the desired columns - in this case: `candy`, `sex`, and `rating`.
+Convert each rating into the score, group the entries and then sum to get the
+total score for each candy for each sex.
 
 ```{r}
-favourites_by_gender <- candy_data %>% 
-  select(candy, gender, reaction) %>%
-  mutate(reaction = case_when(
-    reaction == "JOY" ~ 1,
-    reaction == "DESPAIR" ~ -1,
+favourites_by_sex <- candy_data %>% 
+  select(candy, sex, rating) %>%
+  mutate(rating = case_when(
+    rating == "JOY" ~ 1,
+    rating == "DESPAIR" ~ -1,
     TRUE ~ 0
   )) %>% 
-  group_by(gender, candy) %>% 
-  summarise(score = sum(reaction), .groups = 'drop_last' ) %>% 
+  group_by(sex, candy) %>% 
+  summarise(score = sum(rating), .groups = 'drop_last' ) %>% 
   slice_max(score, n = 2)
 ```
 
@@ -243,7 +246,7 @@ The question asked for the most popular but I've included the second most
 popular as well for further comparison.
 
 ```{r, echo =FALSE, eval=TRUE}
-favourites_by_gender
+favourites_by_sex
 ```
 
 ### Year-by-year most popular
@@ -257,14 +260,14 @@ calculated with `sum` and then a slice can be taken to see the highest scorers.
 
 ```{r}
 favourites_by_year <- candy_data %>% 
-  select(candy, year, reaction) %>%
-  mutate(reaction = case_when(
-    reaction == "JOY" ~ 1,
-    reaction == "DESPAIR" ~ -1,
+  select(candy, year, rating) %>%
+  mutate(rating = case_when(
+    rating == "JOY" ~ 1,
+    rating == "DESPAIR" ~ -1,
     TRUE ~ 0
   )) %>% 
   group_by(year, candy) %>% 
-  summarise(score = sum(reaction), .groups = 'drop_last') %>% 
+  summarise(score = sum(rating), .groups = 'drop_last') %>% 
   slice_max(score, n = 2)
 ```
 
@@ -286,14 +289,14 @@ examined.
 
 ```{r}
 favourites_by_country <- candy_data %>% 
-  select(candy, country, reaction) %>% 
-  mutate(reaction = case_when(
-    reaction == "JOY" ~ 1,
-    reaction == "DESPAIR" ~ -1,
+  select(candy, country, rating) %>% 
+  mutate(rating = case_when(
+    rating == "JOY" ~ 1,
+    rating == "DESPAIR" ~ -1,
     TRUE ~ 0
   )) %>% 
   group_by(country, candy) %>% 
-  summarise(score = sum(reaction), .groups = 'drop_last') %>% 
+  summarise(score = sum(rating), .groups = 'drop_last') %>% 
   slice_max(score, n = 2, with_ties = FALSE)
 ```
 
@@ -309,11 +312,11 @@ Plotting candy preferences
 ```{r}
 counting_despair <- candy_data %>%
   group_by(candy) %>% 
-  add_count(reaction, name = "n_reaction") %>%
-  select(candy, reaction, n_reaction) %>% 
+  add_count(rating, name = "n_rating") %>%
+  select(candy, rating, n_rating) %>% 
   unique() %>% 
-  drop_na(reaction) %>%
-  pivot_wider(names_from = reaction, values_from = n_reaction) %>% 
+  drop_na(rating) %>%
+  pivot_wider(names_from = rating, values_from = n_rating) %>% 
   drop_na() %>% 
   mutate(colour = ifelse(JOY/DESPAIR > 1, "orange", "purple"))
 
