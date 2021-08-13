@@ -17,6 +17,34 @@ library(maps)
 seabird_data <- read_csv(here("data/clean_data/birds_and_ship_data.csv"))
 ```
 
+
+
+```{r}
+# 1. gives you warnings but produces expected result
+iris %>% 
+  separate(Species,
+           into = c(NA, "after_t"),
+           sep = "t", remove = FALSE)
+
+iris %>% 
+  separate(Species,
+           into = "before_t",
+           sep = "t", remove = FALSE)
+
+# 2. can drop unwanted columns with dplyr::select()
+iris %>% 
+  separate(Species,
+           into = c("before_t", "after_t"),
+           sep = "t", remove = FALSE) %>% 
+  select(-before_t)
+
+# 3. how I'd actually do it (maybe incorrectly): (strings + regex is tomorrow)
+
+iris %>% 
+  mutate(after_t = str_extract(Species, "(?<=t)(.*)$"))
+```
+
+
 # Seabird Sightings Data Analysis
 
 ## Cleaning process
@@ -188,12 +216,12 @@ penguin_pattern <- "penguin"
 penguins <- seabird_data %>% 
   mutate(species = str_to_lower(species)) %>% 
   filter(str_detect(species, penguin_pattern))
-```
 
-```{r}
 penguin_sightings <- penguins %>% 
   summarise(sightings = sum(count, na.rm = TRUE), .groups = 'drop_last') %>% 
   arrange(desc(sightings))
+
+penguin_sightings
 ```
 
 
