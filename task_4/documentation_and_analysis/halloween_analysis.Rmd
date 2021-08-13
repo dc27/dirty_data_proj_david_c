@@ -1,5 +1,5 @@
 ---
-title: "Task 4"
+title: "Task 4: Halloween Candy Survey Analysis"
 output:
   html_document:
     df_print: paged
@@ -20,9 +20,7 @@ candy_data <- read_csv(here("data/clean_data/candy.csv"), col_types = cols(
 ))
 ```
 
-# Halloween Candy Survey Analysis
-
-## Data Cleaning Process
+# Data Cleaning Process
 
 The initial dirty data exists in the three separate files which have been
 individually cleaned and then combined (with a bind).
@@ -87,9 +85,9 @@ moved to the appropriate column.
 + assigned each recognised country pattern to one of the desired countries:
 USA, UK, Canada, Other
 
-## Analysis
+# Analysis
 
-### Candy Ratings
+## Candy Ratings
 
 What is the total number of candy ratings given across the three years?
 
@@ -105,7 +103,7 @@ the three years is: *
 n_ratings
 ```
 
-### Trick or Treating age
+## Trick or Treating age
 
 What was the average age of people who are going out trick or treating?
 
@@ -130,7 +128,8 @@ The average age of trick or treaters across all three years was found to be:
 ```{r, echo=FALSE, eval=TRUE}
 average_age_extroverts
 ```
-### Trick or Treat abstainers
+
+## Trick or Treat abstainers
 
 How does this compare to the average age of people who stay inside?
 
@@ -151,7 +150,7 @@ The average age of people who did not go trick or treating was:
 ```{r, echo=FALSE, eval=TRUE}
 average_age_introverts
 ```
-### Joy / Despair / Meh
+## Joy / Despair / Meh
 
 For each of joy, despair, and meh, which candy bar revived the most of these
 ratings?
@@ -194,7 +193,7 @@ only_despair <- candy_data %>%
   arrange(desc(woeful_ratings))
 ```
 
-### Starbust Sadness
+## Starbust Sadness
 
 How many people rated Starburst as despair?
 
@@ -220,7 +219,7 @@ For the next three questions apply the following conversion:
 |Despair|-1|
 |Meh| 0|
 
-### The Loved
+## The Loved
 
 What was the most popular candy bar for each sex in the dataset?
 
@@ -249,7 +248,7 @@ popular as well for further comparison.
 favourites_by_sex
 ```
 
-### Year-by-year most popular
+## Year-by-year most popular
 
 What was the most popular candy bar in each year?
 
@@ -276,7 +275,7 @@ The top 2 are listed. "any full sized candy bar" is a common high scorer.
 favourites_by_year
 ```
 
-### Candy Preference by Country
+## Candy Preference by Country
 
 What was the most popular candy bar for people in US, Canada, UK and all other countries?
 
